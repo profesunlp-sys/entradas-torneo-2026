@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Torneo 27 Junio – Suite</title>
+    <style>
+        :root {
+            --bg: #f4f6fb;
+            --card: #ffffff;
+            --text: #1e293b;
+            --subtext: #64748b;
+            --primary: #3b82f6;
+            --border: #e2e8f0;
+            --stat-bg: #f8fafc;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow: 0 8px 30px rgba(0,0,0,0.06);
+            --btn-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .dark-mode {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --subtext: #94a3b8;
+            --primary: #60a5fa;
+            --border: #334155;
+            --stat-bg: #1e293b;
+            --shadow: 0 8px 30px rgba(0,0,0,0.4);
+            --btn-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ── Global Nav ─────────────────────────────── */
+        .global-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--card);
+            border-bottom: 2px solid var(--border);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            transition: background 0.3s;
+        }
+        .tab-buttons { display: flex; gap: 8px; }
+        .tab-btn {
+            border: 2px solid var(--border);
+            background: var(--stat-bg);
+            color: var(--subtext);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .nav-right { display: flex; align-items: center; gap: 8px; }
+        .clock {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: var(--stat-bg);
+            padding: 5px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+        .icon-btn {
+            background: var(--stat-bg);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            font-size: 17px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            transition: transform 0.2s;
+        }
+        .icon-btn:active { transform: scale(0.92); }
+
+        /* ── Tabs ───────────────────────────────────── */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ── Control de Entradas ────────────────────── */
+        .control-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 20px 15px 30px;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 540px;
+            background: var(--card);
+            border-radius: 28px;
+            padding: 24px 20px;
+            box-shadow: var(--shadow);
+            transition: background 0.3s;
+        }
+        .config-box {
+            background: var(--stat-bg);
+            border: 2px solid var(--primary);
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .config-box label,
+        .controller-box label {
+            display: flex;
+            flex-direction: column;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--primary);
+            gap: 4px;
+        }
+        .config-box select {
+            padding: 8px 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .controller-box { margin-bottom: 20px; }
+        .controller-box select {
+            padding: 10px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 14px;
+            width: 100%;
+        }
+        .last-entry {
+            text-align: center;
+            font-size: 13px;
+            color: var(--subtext);
+            margin: 8px 0 16px;
+            font-weight: 500;
+            min-height: 20px;
+        }
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .entry-btn {
+            border: none;
+            border-radius: 20px;
+            padding: 28px 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.15s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .entry-btn:active { transform: scale(0.94); box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+        .cash-btn     { background: linear-gradient(135deg, #10b981, #059669); }
+        .transfer-btn { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .price-tag    { font-size: 26px; font-weight: 800; letter-spacing: 1px; }
+
+        .stats-card {
+            background: var(--stat-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 16px;
+        }
+        .stat-row:last-child { border-bottom: none; }
+        .total-row {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--success);
+            border-top: 2px solid var(--border);
+            padding-top: 14px;
+            margin-top: 8px;
+        }
+        .stat-value { font-weight: 700; }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 20px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            color: white;
+            transition: opacity 0.2s;
+            flex: 1;
+            text-align: center;
+        }
+        .btn-undo  { background: var(--warning); }
+        .btn-undo:disabled { opacity: 0.4; pointer-events: none; }
+        .btn-reset { background: var(--danger); opacity: 0.8; }
+        .export-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            padding: 18px;
+            font-weight: 800;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            letter-spacing: 0.5px;
+            transition: transform 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .export-btn:active { transform: scale(0.96); }
+        .pulse { animation: pulse 0.4s ease; }
+        @keyframes pulse {
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.06); color: var(--success); }
+            100% { transform: scale(1); }
+        }
+
+        /* ── Consolidador ───────────────────────────── */
+        .consol-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 20px 15px 30px;
+        }
+        .consol-container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: background 0.3s;
+        }
+        .consol-container h1 { color: var(--primary); margin: 0 0 8px; }
+        .subtitle { color: var(--subtext); margin-bottom: 24px; }
+        .drop-zone {
+            border: 2px dashed var(--primary);
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 24px;
+            background: var(--stat-bg);
+            transition: background 0.3s;
+        }
+        .drop-zone.dragover { background: #e0f2fe; }
+        .drop-zone input    { display: none; }
+        .btn-select {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .file-list { margin-bottom: 20px; }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: var(--stat-bg);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .file-item .name  { font-weight: 600; }
+        .file-item .stats { color: var(--subtext); }
+        .btn-remove {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .summary-preview { margin: 20px 0; overflow-x: auto; }
+        .summary-preview table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .summary-preview th { background: var(--primary); color: white; padding: 8px; text-align: left; }
+        .summary-preview td { padding: 8px; border-bottom: 1px solid var(--border); }
+        .btn-generate {
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 16px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.1s;
+        }
+        .btn-generate:active   { transform: scale(0.97); }
+        .btn-generate:disabled { opacity: 0.5; pointer-events: none; }
+        .error-msg   { color: var(--danger);  font-size: 13px; margin-top: 8px; }
+        .warning-msg { color: var(--warning); font-size: 13px; margin-top: 4px; }
+
+        /* ── Modals ─────────────────────────────────── */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 380px;
+            width: 90%;
+            color: var(--text);
+        }
+        .modal-content h3  { margin-bottom: 12px; color: var(--primary); }
+        .modal-content p   { margin-bottom: 12px; font-size: 16px; text-align: center; }
+        .modal-content ol  { padding-left: 20px; margin-bottom: 12px; }
+        .modal-content ol li { margin-bottom: 8px; line-height: 1.5; }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            font-size: 16px;
+            margin-bottom: 12px;
+            background: var(--bg);
+            color: var(--text);
+            text-align: center;
+        }
+        .modal-buttons { display: flex; gap: 8px; justify-content: center; }
+        .btn-cancel  { background: #94a3b8;      color: white; border: none; border-radius: 10px; padding: 12px 20px; cursor: pointer; font-weight: 600; font-size: 15px; }
+        .btn-safe    { background: var(--success); color: white; border: none; border-radius: 10px; padding: 12px 20px; cursor: pointer; font-weight: 600; font-size: 15px; }
+        .btn-confirm { background: var(--danger);  color: white; border: none; border-radius: 10px; padding: 10px 18px; cursor: pointer; font-weight: 600; }
+        .btn-ok      { background: var(--primary); color: white; border: none; border-radius: 10px; padding: 12px 30px; cursor: pointer; font-weight: 600; font-size: 15px; }
+    </style>
+</head>
+<body>
+
+<!-- ── Global Nav ──────────────────────────────────── -->
+<nav class="global-nav">
+    <div class="tab-buttons">
+        <button class="tab-btn active" id="tab-btn-control" onclick="switchTab('control')">🎫 Control Entradas</button>
+        <button class="tab-btn"        id="tab-btn-consol"  onclick="switchTab('consol')">📊 Consolidador</button>
+    </div>
+    <div class="nav-right">
+        <span class="clock" id="live-clock">--:--:--</span>
+        <button class="icon-btn" onclick="toggleDark()">🌓</button>
+        <button class="icon-btn" onclick="showHelp()">❓</button>
+    </div>
+</nav>
+
+<!-- ── Tab 1: Control de Entradas ─────────────────── -->
+<div id="tab-control" class="tab-content active">
+    <div class="control-wrapper">
+        <div class="app-container">
+
+            <div class="config-box">
+                <label>📍 Acceso
+                    <select id="gate-select" onchange="saveConfig()">
+                        <option>Entrada 1</option>
+                        <option>Entrada 2</option>
+                        <option>Entrada 3</option>
+                    </select>
+                </label>
+                <label>🕒 Turno
+                    <select id="shift-select" onchange="saveConfig()">
+                        <option>08:30 - 11:30 | USAG 2</option>
+                        <option>11:45 - 13:15 | USAG 1 A</option>
+                        <option>13:30 - 14:30 | PULGAS</option>
+                        <option>14:45 - 16:00 | E2 Y E3</option>
+                        <option>16:15 - 17:45 | E1 A</option>
+                        <option>18:00 - 20:30 | E1 B / USAG 1 B</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="controller-box">
+                <label>👤 Controlador
+                    <select id="controller-select" onchange="saveConfig()">
+                        <option>Maylén</option>
+                        <option>Lola</option>
+                        <option>Sabrina</option>
+                        <option>Lucía</option>
+                        <option>Milagros</option>
+                        <option>Catalina</option>
+                        <option>Jose Ma.</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="last-entry" id="last-entry-text">Último registro: —</div>
+
+            <div class="buttons-grid">
+                <button class="entry-btn cash-btn"     onclick="register('cash')">
+                    💵 Efectivo
+                    <span class="price-tag">$10.000</span>
+                </button>
+                <button class="entry-btn transfer-btn" onclick="register('transfer')">
+                    📱 Transferencia
+                    <span class="price-tag">$10.007</span>
+                </button>
+            </div>
+
+            <div class="stats-card">
+                <div class="stat-row">
+                    <span>💵 Efectivo</span>
+                    <span class="stat-value" id="count-cash">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>📱 Transferencia</span>
+                    <span class="stat-value" id="count-transfer">0</span>
+                </div>
+                <div class="stat-row" style="font-weight:800;">
+                    <span>👥 Total personas</span>
+                    <span class="stat-value" id="count-total">0</span>
+                </div>
+                <div class="stat-row total-row">
+                    <span>💰 Recaudado</span>
+                    <span class="stat-value" id="money-total">$0</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-undo"  id="btn-undo" onclick="undoLast()" disabled>↩ Deshacer</button>
+                <button class="btn btn-reset" onclick="askResetPassword()">🔒 Reiniciar</button>
+            </div>
+
+            <button class="export-btn" onclick="askDownloadPassword()">
+                📥 Descargar Reporte
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<!-- ── Tab 2: Consolidador ────────────────────────── -->
+<div id="tab-consol" class="tab-content">
+    <div class="consol-wrapper">
+        <div class="consol-container">
+            <h1>📊 Consolidador de Reportes</h1>
+            <p class="subtitle">Torneo 27 de Junio · Uní todos los archivos Excel de las entradas</p>
+
+            <div class="drop-zone" id="dropZone">
+                <p>Arrastrá los archivos <strong>.xls</strong> aquí o</p>
+                <label class="btn-select">
+                    Seleccionar archivos
+                    <input type="file" id="fileInput" multiple accept=".xls,.xlsx">
+                </label>
+            </div>
+
+            <div id="fileList"       class="file-list"></div>
+            <div id="summaryPreview" class="summary-preview"></div>
+
+            <button class="btn-generate" id="btnGenerate" disabled onclick="generateConsolidatedReport()">
+                📥 Generar Reporte Consolidado
+            </button>
+            <div id="errorMsg"   class="error-msg"></div>
+            <div id="warningMsg" class="warning-msg"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Modals ─────────────────────────────────────── -->
+
+<div class="modal" id="downloadModal">
+    <div class="modal-content">
+        <h3>🔒 Descargar Reporte</h3>
+        <p>Ingresá la clave para continuar:</p>
+        <input type="password" id="downloadPasswordInput" placeholder="Clave" autocomplete="off">
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="closeDownloadModal()">Cancelar</button>
+            <button class="btn-safe"   onclick="confirmDownload()">Continuar</button>
+        </div>
+    </div>
