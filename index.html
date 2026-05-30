@@ -53,11 +53,10 @@
             background: var(--card);
             display: flex;
             flex-direction: column;
-            padding: 10px 14px;
+            padding: 12px 14px;
             box-shadow: var(--shadow);
             transition: background 0.3s;
-            justify-content: space-between;  /* Distribuye verticalmente */
-            gap: 6px;
+            gap: 8px;                     /* Espacio uniforme */
         }
 
         /* Header */
@@ -139,9 +138,11 @@
             color: var(--subtext);
             font-weight: 500;
             flex-shrink: 0;
+            margin-top: -2px;
+            margin-bottom: -2px;
         }
 
-        /* Botones de venta (tamaño anterior, no flex) */
+        /* Botones de venta */
         .buttons-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -151,10 +152,10 @@
         .entry-btn {
             border: none;
             border-radius: 20px;
-            padding: 20px 10px;          /* Tamaño intermedio */
+            padding: 18px 8px;
             color: white;
             font-weight: 700;
-            font-size: 17px;
+            font-size: 16px;
             cursor: pointer;
             box-shadow: var(--btn-shadow);
             transition: all 0.1s ease;
@@ -173,12 +174,12 @@
         .cash-btn { background: linear-gradient(135deg, #10b981, #059669); }
         .transfer-btn { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .price-tag {
-            font-size: 1.8rem;            /* Precio bien visible */
+            font-size: 1.8rem;
             font-weight: 800;
             letter-spacing: 1px;
         }
 
-        /* Panel de totales (compacto) */
+        /* Panel de totales */
         .stats-card {
             background: var(--stat-bg);
             border: 1px solid var(--border);
@@ -206,24 +207,29 @@
         }
         .stat-value { font-weight: 700; }
 
-        /* Barra de acciones */
+        /* Barra de acciones (con texto completo) */
         .action-bar {
             display: flex;
             gap: 8px;
             flex-shrink: 0;
             align-items: center;
+            margin-top: auto;            /* Empuja hacia abajo si sobra espacio */
         }
         .btn {
             border: none;
             border-radius: 12px;
-            padding: 10px 12px;
+            padding: 12px 8px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             color: white;
             transition: opacity 0.2s;
             flex: 1;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
         .btn-undo { background: var(--warning); }
         .btn-undo:disabled { opacity: 0.4; pointer-events: none; }
@@ -233,7 +239,7 @@
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 10px 12px;
+            padding: 12px 10px;
             font-weight: 800;
             font-size: 14px;
             cursor: pointer;
@@ -242,6 +248,10 @@
             transition: transform 0.1s;
             flex: 2;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
         .export-btn:active { transform: scale(0.97); }
 
@@ -252,7 +262,7 @@
             100% { transform: scale(1); }
         }
 
-        /* Modales (sin cambios) */
+        /* Modales */
         .modal {
             display: none;
             position: fixed;
@@ -358,13 +368,13 @@
     </div>
 
     <div class="action-bar">
-        <button class="btn btn-undo" id="btn-undo" onclick="undoLast()" disabled>↩</button>
-        <button class="btn btn-reset" onclick="askResetPassword()">🔒</button>
+        <button class="btn btn-undo" id="btn-undo" onclick="undoLast()" disabled>↩ Deshacer</button>
+        <button class="btn btn-reset" onclick="askResetPassword()">🔒 Reiniciar</button>
         <button class="export-btn" onclick="askDownloadPassword()">📥 Descargar</button>
     </div>
 </div>
 
-<!-- Modales (idénticos a antes) -->
+<!-- Modales -->
 <div class="modal" id="downloadModal">
     <div class="modal-content">
         <h3>🔒 Descargar Reporte</h3>
