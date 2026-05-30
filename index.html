@@ -53,13 +53,14 @@
             background: var(--card);
             display: flex;
             flex-direction: column;
-            padding: 8px 12px;
+            padding: 10px 14px;
             box-shadow: var(--shadow);
             transition: background 0.3s;
-            gap: 4px;
+            justify-content: space-between;  /* Distribuye verticalmente */
+            gap: 6px;
         }
 
-        /* Header ultra compacto */
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -71,8 +72,6 @@
             font-weight: 700;
             font-size: 1rem;
             color: var(--primary);
-            letter-spacing: -0.5px;
-            white-space: nowrap;
         }
         .clock {
             font-size: 0.9rem;
@@ -81,7 +80,6 @@
             padding: 2px 10px;
             border-radius: 20px;
             border: 1px solid var(--border);
-            white-space: nowrap;
         }
         .icon-btn {
             background: var(--stat-bg);
@@ -100,13 +98,13 @@
         }
         .icon-btn:active { transform: scale(0.9); }
 
-        /* Configuración en una línea */
+        /* Configuración en línea */
         .config-row {
             display: flex;
             gap: 6px;
             flex-shrink: 0;
         }
-        .config-box {
+        .config-box, .controller-box {
             flex: 1;
             background: var(--stat-bg);
             border: 1.5px solid var(--primary);
@@ -116,14 +114,14 @@
             flex-direction: column;
             gap: 2px;
         }
-        .config-box label {
+        .config-box label, .controller-box label {
             font-size: 9px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             color: var(--primary);
         }
-        .config-box select {
+        .config-box select, .controller-box select {
             padding: 4px 2px;
             border-radius: 8px;
             border: 1px solid var(--border);
@@ -132,33 +130,7 @@
             font-weight: 600;
             font-size: 11px;
         }
-        .controller-box {
-            flex: 1;
-            background: var(--stat-bg);
-            border: 1.5px solid var(--primary);
-            border-radius: 14px;
-            padding: 6px 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .controller-box label {
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            color: var(--primary);
-        }
-        .controller-box select {
-            padding: 4px 2px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--card);
-            color: var(--text);
-            font-weight: 600;
-            font-size: 12px;
-            width: 100%;
-        }
+        .controller-box select { font-size: 12px; }
 
         /* Último registro */
         .last-entry {
@@ -167,26 +139,22 @@
             color: var(--subtext);
             font-weight: 500;
             flex-shrink: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        /* Botones de venta: ocupan el mayor espacio posible */
+        /* Botones de venta (tamaño anterior, no flex) */
         .buttons-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            flex: 1;
-            min-height: 0;
+            gap: 12px;
+            flex-shrink: 0;
         }
         .entry-btn {
             border: none;
-            border-radius: 16px;
-            padding: 10px 8px;
+            border-radius: 20px;
+            padding: 20px 10px;          /* Tamaño intermedio */
             color: white;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 17px;
             cursor: pointer;
             box-shadow: var(--btn-shadow);
             transition: all 0.1s ease;
@@ -194,7 +162,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
@@ -205,43 +173,43 @@
         .cash-btn { background: linear-gradient(135deg, #10b981, #059669); }
         .transfer-btn { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .price-tag {
-            font-size: 1.6rem;
+            font-size: 1.8rem;            /* Precio bien visible */
             font-weight: 800;
             letter-spacing: 1px;
         }
 
-        /* Panel de totales */
+        /* Panel de totales (compacto) */
         .stats-card {
             background: var(--stat-bg);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 8px 10px;
+            padding: 10px 12px;
             flex-shrink: 0;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4px 12px;
+            gap: 6px 14px;
         }
         .stat-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
+            font-size: 14px;
             border-bottom: 1px solid var(--border);
             padding: 4px 0;
         }
         .stat-row.total-row {
             border-bottom: none;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 800;
             color: var(--success);
             grid-column: 1 / -1;
         }
         .stat-value { font-weight: 700; }
 
-        /* Barra de acciones (deshacer, reiniciar, descargar) */
+        /* Barra de acciones */
         .action-bar {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-shrink: 0;
             align-items: center;
         }
@@ -250,7 +218,7 @@
             border-radius: 12px;
             padding: 10px 12px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             color: white;
             transition: opacity 0.2s;
@@ -267,7 +235,7 @@
             border-radius: 12px;
             padding: 10px 12px;
             font-weight: 800;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             box-shadow: var(--btn-shadow);
             letter-spacing: 0.3px;
@@ -396,7 +364,7 @@
     </div>
 </div>
 
-<!-- Modales (sin cambios en funcionalidad) -->
+<!-- Modales (idénticos a antes) -->
 <div class="modal" id="downloadModal">
     <div class="modal-content">
         <h3>🔒 Descargar Reporte</h3>
