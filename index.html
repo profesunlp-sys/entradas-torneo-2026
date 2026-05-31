@@ -1,34 +1,25 @@
 <!DOCTYPE html>
-<html lang="es">
+<html class="dark" lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Control de Entradas – Torneo 27 Junio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f4f6fb;
-            --card: #ffffff;
-            --text: #1e293b;
-            --subtext: #64748b;
-            --primary: #3b82f6;
-            --border: #e2e8f0;
-            --stat-bg: #f8fafc;
+            --bg: #0a0f1e;
+            --card: rgba(22, 27, 44, 0.6);
+            --text: #e0e3e5;
+            --subtext: #909097;
+            --primary: #c2c6db;
+            --border: rgba(255, 255, 255, 0.1);
+            --stat-bg: #05070a;
             --success: #10b981;
-            --danger: #ef4444;
+            --danger: #ffb4ab;
             --warning: #f59e0b;
-            --shadow: 0 8px 20px rgba(0,0,0,0.05);
-            --btn-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .dark-mode {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --subtext: #94a3b8;
-            --primary: #60a5fa;
-            --border: #334155;
-            --stat-bg: #1e293b;
-            --shadow: 0 8px 20px rgba(0,0,0,0.3);
-            --btn-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            --secondary: #adc6ff;
+            --tertiary: #4edea3;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -36,283 +27,272 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
+            background-color: var(--bg);
             color: var(--text);
-            transition: background 0.3s, color 0.3s;
         }
         body {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-        }
-        .app-container {
-            width: 100%;
-            height: 100%;
-            max-width: 540px;
-            background: var(--card);
-            display: flex;
             flex-direction: column;
-            padding: 16px 18px;
-            box-shadow: var(--shadow);
-            transition: background 0.3s;
-            justify-content: space-between;
         }
 
         /* Header */
-        .header {
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 4px;
+            padding: 0 20px;
+            height: 64px;
+            flex-shrink: 0;
+            background: var(--bg);
         }
-        .logo {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--primary);
-        }
-        .clock {
-            font-size: 0.9rem;
-            font-weight: 600;
-            background: var(--stat-bg);
-            padding: 2px 10px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-        .icon-btn {
-            background: var(--stat-bg);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            font-size: 16px;
-            cursor: pointer;
+        .logo-area {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: var(--text);
-            transition: transform 0.2s;
+            gap: 8px;
+        }
+        .logo-area .material-symbols-outlined { color: var(--primary); font-variation-settings: 'FILL' 1; }
+        h1 { font-size: 1.3rem; font-weight: 700; color: var(--primary); letter-spacing: -0.01em; }
+        .clock-badge {
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;
+            color: var(--subtext); background: rgba(22, 27, 44, 0.6);
+            padding: 4px 12px; border-radius: 999px;
+        }
+        .icon-btn {
+            color: var(--subtext); cursor: pointer; transition: transform 0.2s;
+            font-size: 24px; user-select: none;
         }
         .icon-btn:active { transform: scale(0.9); }
 
-        /* Configuración */
-        .config-row {
-            display: flex;
-            gap: 8px;
-        }
-        .config-box, .controller-box {
+        /* Main */
+        main {
             flex: 1;
-            background: var(--stat-bg);
-            border: 1.5px solid var(--primary);
-            border-radius: 14px;
-            padding: 8px 10px;
+            overflow-y: auto;
+            padding: 0 20px 100px 20px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-        }
-        .config-box label, .controller-box label {
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            color: var(--primary);
-        }
-        .config-box select, .controller-box select {
-            padding: 6px 4px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--card);
-            color: var(--text);
-            font-weight: 600;
-            font-size: 12px;
+            gap: 12px;
         }
 
-        /* Último registro */
-        .last-entry {
-            text-align: center;
-            font-size: 12px;
-            color: var(--subtext);
-            font-weight: 500;
-        }
-
-        /* Botones de venta */
-        .buttons-grid {
+        /* Config */
+        .config-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 4px;
         }
-        .entry-btn {
-            border: none;
-            border-radius: 22px;
-            padding: 24px 12px;
-            color: white;
-            font-weight: 700;
-            font-size: 17px;
-            cursor: pointer;
-            box-shadow: var(--btn-shadow);
-            transition: all 0.1s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+        .config-field { display: flex; flex-direction: column; gap: 4px; }
+        .config-field label {
+            font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em;
+            color: var(--subtext); text-transform: uppercase;
         }
-        .entry-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
-        .cash-btn { background: linear-gradient(135deg, #10b981, #059669); }
-        .transfer-btn { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-        .price-tag {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: 1px;
+        .config-field select {
+            height: 40px; padding: 0 8px; border-radius: 8px;
+            background: var(--stat-bg); border: 1px solid var(--border);
+            color: var(--text); font-size: 0.85rem; font-weight: 600;
+            appearance: none;
         }
 
-        /* Panel de totales */
+        /* Last entry */
+        .glass-card {
+            background: var(--card); backdrop-filter: blur(12px);
+            border: 1px solid var(--border); border-radius: 14px;
+        }
+        .last-entry-card {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px;
+        }
+        .last-entry-left { display: flex; align-items: center; gap: 12px; }
+        .last-entry-icon {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(194, 198, 219, 0.1); display: flex;
+            align-items: center; justify-content: center;
+        }
+        .last-entry-icon .material-symbols-outlined { color: var(--primary); }
+        .last-entry-info p:first-child { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em; color: var(--subtext); }
+        .last-entry-info p:last-child { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+        .last-entry-time { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; color: var(--subtext); }
+
+        /* Buttons */
+        .buttons-section { display: flex; flex-direction: column; gap: 14px; }
+        .main-btn {
+            height: 90px; border-radius: 16px; border: 1px solid transparent;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 22px; transition: all 0.1s ease; cursor: pointer;
+            user-select: none; -webkit-tap-highlight-color: transparent;
+        }
+        .main-btn:active { transform: scale(0.96); }
+        .btn-cash { background: linear-gradient(135deg, #10b981, #065f46); border-color: rgba(16, 185, 129, 0.3); }
+        .btn-transfer { background: linear-gradient(135deg, #3b82f6, #1e40af); border-color: rgba(59, 130, 246, 0.3); }
+        .btn-left { display: flex; flex-direction: column; align-items: flex-start; }
+        .btn-label { font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+        .btn-price { font-size: 2rem; font-weight: 700; color: white; letter-spacing: -0.02em; }
+        .btn-icon { font-size: 2.5rem; color: rgba(255,255,255,0.5); }
+
+        /* Stats */
         .stats-card {
-            background: var(--stat-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 12px 14px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px 16px;
+            background: var(--card); backdrop-filter: blur(12px);
+            border: 1px solid var(--border); border-radius: 14px;
+            padding: 14px; display: flex; flex-direction: column; gap: 12px;
         }
-        .stat-row {
+        .stats-card h3 {
+            font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em;
+            color: var(--subtext); border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 8px;
+        }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-box {
+            background: rgba(5,7,10,0.8); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px; padding: 12px;
+        }
+        .stat-box p:first-child { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.05em; color: var(--subtext); }
+        .stat-box p:last-child { font-size: 1.5rem; font-weight: 700; color: var(--primary); letter-spacing: -0.01em; }
+        .stat-box.highlight { background: rgba(10,15,30,0.9); border-color: rgba(194,198,219,0.2); }
+        .stat-box.highlight p:last-child { color: white; }
+
+        /* Bottom bar */
+        nav {
+            position: fixed; bottom: 0; width: 100%; z-index: 50;
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 0 16px 16px 16px; height: 80px;
+            background: rgba(22, 27, 44, 0.8); backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 8px 10px; border-radius: 10px; cursor: pointer;
+            transition: all 0.1s ease; user-select: none;
+        }
+        .nav-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.05); }
+        .nav-btn .material-symbols-outlined { font-size: 22px; }
+        .nav-btn span { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.05em; margin-top: 2px; }
+        .nav-undo { color: var(--danger); }
+        .nav-reset { color: var(--subtext); }
+        .nav-download { color: var(--secondary); }
+        .nav-consolidator { color: var(--tertiary); }
+
+        /* Page system */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Consolidator page */
+        .drop-zone {
+            border: 2px dashed var(--primary);
+            border-radius: 14px;
+            padding: 30px 20px;
+            text-align: center;
+            margin: 16px 0;
+            background: rgba(5,7,10,0.6);
+            transition: background 0.3s;
+        }
+        .drop-zone.dragover { background: rgba(194,198,219,0.1); }
+        .drop-zone input { display: none; }
+        .btn-select {
+            background: var(--primary);
+            color: #0a0f1e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .file-list { margin: 12px 0; }
+        .file-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 15px;
-            border-bottom: 1px solid var(--border);
-            padding: 6px 0;
+            padding: 10px 12px;
+            background: rgba(5,7,10,0.6);
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+            gap: 8px;
         }
-        .stat-row.total-row {
-            border-bottom: none;
-            font-size: 19px;
-            font-weight: 800;
-            color: var(--success);
-            grid-column: 1 / -1;
-        }
-        .stat-value { font-weight: 700; }
-
-        /* Barra de acciones */
-        .action-bar {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .btn {
-            border: none;
-            border-radius: 14px;
-            padding: 14px 16px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
+        .file-item .name { font-weight: 600; flex: 1; }
+        .file-item .stats { color: var(--subtext); font-size: 0.7rem; }
+        .btn-remove {
+            background: var(--danger);
             color: white;
-            transition: opacity 0.2s;
-            flex: 1;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: bold;
         }
-        .btn-undo { background: var(--warning); }
-        .btn-undo:disabled { opacity: 0.4; pointer-events: none; }
-        .btn-reset { background: var(--danger); opacity: 0.9; }
-        .export-btn {
+        .btn-generate {
+            width: 100%;
             background: linear-gradient(135deg, #8b5cf6, #6366f1);
             color: white;
             border: none;
             border-radius: 14px;
-            padding: 14px 16px;
+            padding: 14px;
             font-weight: 800;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: var(--btn-shadow);
-            letter-spacing: 0.3px;
-            transition: transform 0.1s;
-            flex: 2.5;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .export-btn:active { transform: scale(0.97); }
-
-        .pulse { animation: pulse 0.3s ease; }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); color: var(--success); }
-            100% { transform: scale(1); }
-        }
-
-        /* Modales */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal.active { display: flex; }
-        .modal-content {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 20px;
-            max-width: 320px;
-            width: 90%;
-            color: var(--text);
-        }
-        .modal-content h3 { margin-bottom: 10px; color: var(--primary); font-size: 1.1rem; }
-        .modal-content p { margin-bottom: 10px; font-size: 0.9rem; text-align: center; }
-        .modal-content input {
-            width: 100%;
-            padding: 8px;
-            border-radius: 8px;
-            border: 2px solid var(--border);
             font-size: 0.9rem;
-            margin-bottom: 10px;
-            background: var(--bg);
-            color: var(--text);
-            text-align: center;
+            cursor: pointer;
+            margin-top: 12px;
         }
-        .modal-buttons { display: flex; gap: 6px; justify-content: center; }
-        .btn-cancel { background: #94a3b8; color: white; border: none; border-radius: 8px; padding: 10px 16px; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
-        .btn-safe { background: var(--success); color: white; border: none; border-radius: 8px; padding: 10px 16px; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
-        .btn-confirm { background: var(--danger); color: white; border: none; border-radius: 8px; padding: 10px 16px; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
-        .btn-ok { background: var(--primary); color: white; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
+        .btn-generate:disabled { opacity: 0.5; pointer-events: none; }
+        .summary-preview { margin: 12px 0; font-size: 0.8rem; }
+        .summary-preview table { width: 100%; border-collapse: collapse; }
+        .summary-preview th { background: rgba(194,198,219,0.2); padding: 6px; text-align: left; font-size: 0.7rem; }
+        .summary-preview td { padding: 6px; border-bottom: 1px solid var(--border); }
+        .error { color: var(--danger); font-size: 0.75rem; margin-top: 6px; }
+
+        /* Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px); z-index: 100;
+            justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--card); backdrop-filter: blur(16px);
+            border: 1px solid var(--border); border-radius: 20px;
+            padding: 24px; width: 100%; max-width: 320px; text-align: center;
+        }
+        .modal-content h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; color: var(--primary); }
+        .modal-content p { font-size: 0.9rem; color: var(--subtext); margin-bottom: 20px; }
+        .modal-content input {
+            width: 100%; padding: 10px; border-radius: 10px; border: 2px solid var(--border);
+            background: var(--stat-bg); color: var(--text); font-size: 1rem; text-align: center;
+            margin-bottom: 16px;
+        }
+        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
+        .modal-btn {
+            flex: 1; height: 44px; border-radius: 10px; border: none;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+        }
+        .btn-cancel { background: rgba(255,255,255,0.1); color: var(--text); }
+        .btn-confirm { background: var(--danger); color: #0a0f1e; }
+        .btn-safe { background: var(--success); color: white; }
+        .btn-ok { background: var(--primary); color: #0a0f1e; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <span class="logo">🎫 Torneo 27 Junio</span>
-        <span class="clock" id="live-clock">--:--:--</span>
-        <div style="display:flex; gap:4px;">
-            <button class="icon-btn" onclick="toggleDark()">🌓</button>
-            <button class="icon-btn" onclick="showHelp()">❓</button>
-        </div>
+<header>
+    <div class="logo-area">
+        <span class="material-symbols-outlined">schedule</span>
+        <h1>🎫 Torneo 27 Junio</h1>
     </div>
+    <div class="clock-badge" id="clock">00:00:00</div>
+    <span class="icon-btn material-symbols-outlined" onclick="showHelp()">help</span>
+</header>
 
+<!-- PÁGINA 1: CONTROL DE ENTRADAS -->
+<main id="page-control" class="page active">
     <div class="config-row">
-        <div class="config-box">
-            <label>📍 Acceso</label>
+        <div class="config-field">
+            <label>Acceso</label>
             <select id="gate-select" onchange="saveConfig()">
                 <option value="Entrada 1">Entrada 1</option>
                 <option value="Entrada 2">Entrada 2</option>
                 <option value="Entrada 3">Entrada 3</option>
             </select>
         </div>
-        <div class="config-box">
-            <label>🕒 Turno</label>
+        <div class="config-field">
+            <label>Turno</label>
             <select id="shift-select" onchange="saveConfig()">
                 <option value="08:30 - 11:30 | USAG 2">08:30 - 11:30 | USAG 2</option>
                 <option value="11:45 - 13:15 | USAG 1 A">11:45 - 13:15 | USAG 1 A</option>
@@ -322,8 +302,8 @@
                 <option value="18:00 - 20:30 | E1 B / USAG 1 B">18:00 - 20:30 | E1 B / USAG 1 B</option>
             </select>
         </div>
-        <div class="controller-box">
-            <label>👤 Controlador</label>
+        <div class="config-field">
+            <label>Controlador</label>
             <select id="controller-select" onchange="saveConfig()">
                 <option value="Maylén">Maylén</option>
                 <option value="Lola">Lola</option>
@@ -336,92 +316,144 @@
         </div>
     </div>
 
-    <div class="last-entry" id="last-entry-text">Último: —</div>
+    <div class="glass-card last-entry-card">
+        <div class="last-entry-left">
+            <div class="last-entry-icon">
+                <span class="material-symbols-outlined">history</span>
+            </div>
+            <div class="last-entry-info">
+                <p>ÚLTIMO REGISTRO</p>
+                <p id="last-entry-text">Esperando registros...</p>
+            </div>
+        </div>
+        <span class="last-entry-time" id="last-entry-time">--:--</span>
+    </div>
 
-    <div class="buttons-grid">
-        <button class="entry-btn cash-btn" onclick="register('cash')">
-            💵 Efectivo
-            <span class="price-tag">$10.000</span>
+    <div class="buttons-section">
+        <button class="main-btn btn-cash" onclick="register('cash')">
+            <div class="btn-left">
+                <span class="btn-label">Efectivo</span>
+                <span class="btn-price">$10.000</span>
+            </div>
+            <span class="btn-icon material-symbols-outlined">payments</span>
         </button>
-        <button class="entry-btn transfer-btn" onclick="register('transfer')">
-            📱 Transferencia
-            <span class="price-tag">$10.007</span>
+        <button class="main-btn btn-transfer" onclick="register('transfer')">
+            <div class="btn-left">
+                <span class="btn-label">Transferencia</span>
+                <span class="btn-price">$10.007</span>
+            </div>
+            <span class="btn-icon material-symbols-outlined">smartphone</span>
         </button>
     </div>
 
     <div class="stats-card">
-        <div class="stat-row"><span>💵 Efectivo</span> <span class="stat-value" id="count-cash">0</span></div>
-        <div class="stat-row"><span>📱 Transf.</span> <span class="stat-value" id="count-transfer">0</span></div>
-        <div class="stat-row"><span>👥 Total</span> <span class="stat-value" id="count-total">0</span></div>
-        <div class="stat-row total-row"><span>💰 Recaudado</span> <span class="stat-value" id="money-total">$0</span></div>
+        <h3>ESTADÍSTICAS EN VIVO</h3>
+        <div class="stats-grid">
+            <div class="stat-box"><p>EFECTIVO</p><p id="count-cash">0</p></div>
+            <div class="stat-box"><p>TRANSF.</p><p id="count-transfer">0</p></div>
+            <div class="stat-box"><p>TOTAL PERSONAS</p><p id="count-total">0</p></div>
+            <div class="stat-box highlight"><p>TOTAL RECAUDADO</p><p id="money-total">$0</p></div>
+        </div>
+    </div>
+</main>
+
+<!-- PÁGINA 2: CONSOLIDADOR -->
+<main id="page-consolidator" class="page">
+    <h2 style="font-size:1.2rem; margin-bottom:8px; color:var(--primary);">📊 Consolidador</h2>
+    <p style="font-size:0.8rem; color:var(--subtext); margin-bottom:12px;">Cargá los archivos .xls de los controladores</p>
+
+    <div class="drop-zone" id="dropZone">
+        <p style="margin-bottom:10px;">Arrastrá los archivos .xls aquí o</p>
+        <label class="btn-select">
+            Seleccionar archivos
+            <input type="file" id="fileInput" multiple accept=".xls,.xlsx">
+        </label>
     </div>
 
-    <div class="action-bar">
-        <button class="btn btn-undo" id="btn-undo" onclick="undoLast()" disabled>↩ Deshacer</button>
-        <button class="btn btn-reset" onclick="askResetPassword()">🔒 Reiniciar</button>
-        <button class="export-btn" onclick="askDownloadPassword()">📥 Descargar</button>
+    <div id="fileList" class="file-list"></div>
+    <div id="summaryPreview" class="summary-preview"></div>
+
+    <button class="btn-generate" id="btnGenerate" disabled onclick="generateConsolidatedReport()">
+        📥 Generar Reporte Consolidado
+    </button>
+    <div id="errorMsg" class="error"></div>
+</main>
+
+<nav>
+    <div class="nav-btn nav-undo" onclick="undoLast()">
+        <span class="material-symbols-outlined">undo</span>
+        <span>Deshacer</span>
     </div>
-</div>
+    <div class="nav-btn nav-reset" onclick="askResetPassword()">
+        <span class="material-symbols-outlined">refresh</span>
+        <span>Reiniciar</span>
+    </div>
+    <div class="nav-btn nav-download" onclick="askDownloadPassword()">
+        <span class="material-symbols-outlined">ios_share</span>
+        <span>Descargar</span>
+    </div>
+    <div class="nav-btn nav-consolidator" onclick="switchPage('consolidator')">
+        <span class="material-symbols-outlined">merge</span>
+        <span>Consolidar</span>
+    </div>
+</nav>
 
 <!-- Modales -->
-<div class="modal" id="downloadModal">
+<div class="modal-overlay" id="downloadModal">
     <div class="modal-content">
-        <h3>🔒 Descargar Reporte</h3>
+        <h2>🔒 Descargar Reporte</h2>
         <p>Ingresá la clave para continuar:</p>
         <input type="password" id="downloadPasswordInput" placeholder="Clave" autocomplete="off">
         <div class="modal-buttons">
-            <button class="btn-cancel" onclick="closeDownloadModal()">Cancelar</button>
-            <button class="btn-safe" onclick="confirmDownload()">Continuar</button>
+            <button class="modal-btn btn-cancel" onclick="closeDownloadModal()">Cancelar</button>
+            <button class="modal-btn btn-safe" onclick="confirmDownload()">Descargar</button>
         </div>
     </div>
 </div>
 
-<div class="modal" id="sharedModal">
+<div class="modal-overlay" id="passwordModal">
     <div class="modal-content">
-        <h3>✅ Reporte compartido</h3>
-        <p>Seleccioná WhatsApp u otra app para enviarlo.</p>
-        <div class="modal-buttons">
-            <button class="btn-ok" onclick="closeSharedModal()">Listo</button>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="savedModal">
-    <div class="modal-content">
-        <h3>✅ Reporte descargado</h3>
-        <p>¿Ya guardaste el archivo?</p>
-        <div class="modal-buttons">
-            <button class="btn-ok" onclick="closeSavedModal()">Sí, guardado</button>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="helpModal">
-    <div class="modal-content">
-        <h3>📘 Instrucciones</h3>
-        <ol style="font-size:0.8rem; padding-left:20px;">
-            <li>Configurá <strong>Acceso</strong>, <strong>Turno</strong> y <strong>Controlador</strong>.</li>
-            <li>Registrá cada pago con los botones.</li>
-            <li>Al finalizar, pedí la clave para descargar.</li>
-            <li>Los datos no se pierden aunque se apague el celular.</li>
-        </ol>
-        <button class="btn" style="background:var(--primary); margin-top:10px; width:100%;" onclick="closeHelp()">Entendido</button>
-    </div>
-</div>
-
-<div class="modal" id="passwordModal">
-    <div class="modal-content">
-        <h3>🔒 Reiniciar</h3>
+        <h2>🔒 Reiniciar</h2>
         <p>Ingresá la clave para reiniciar:</p>
         <input type="password" id="resetPasswordInput" placeholder="Clave" autocomplete="off">
         <div class="modal-buttons">
-            <button class="btn-cancel" onclick="closePasswordModal()">Cancelar</button>
-            <button class="btn-confirm" onclick="confirmReset()">Reiniciar</button>
+            <button class="modal-btn btn-cancel" onclick="closePasswordModal()">Cancelar</button>
+            <button class="modal-btn btn-confirm" onclick="confirmReset()">Reiniciar</button>
         </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="sharedModal">
+    <div class="modal-content">
+        <h2>✅ Reporte compartido</h2>
+        <p>Seleccioná WhatsApp u otra app para enviarlo.</p>
+        <button class="modal-btn btn-ok" style="width:100%;" onclick="document.getElementById('sharedModal').classList.remove('active')">Listo</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="savedModal">
+    <div class="modal-content">
+        <h2>✅ Reporte descargado</h2>
+        <p>¿Ya guardaste el archivo?</p>
+        <button class="modal-btn btn-ok" style="width:100%;" onclick="document.getElementById('savedModal').classList.remove('active')">Sí, guardado</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="helpModal">
+    <div class="modal-content">
+        <h2>📘 Instrucciones</h2>
+        <p style="text-align:left; font-size:0.85rem;">
+            1. Configurá Acceso, Turno y Controlador.<br>
+            2. Registrá cada pago con los botones.<br>
+            3. Al finalizar, pedí la clave para descargar.<br>
+            4. Usá "Consolidar" para juntar todos los Excel.
+        </p>
+        <button class="modal-btn btn-ok" style="width:100%;" onclick="document.getElementById('helpModal').classList.remove('active')">Entendido</button>
     </div>
 </div>
 
 <script>
+    // ==================== CONTROL DE ENTRADAS ====================
     const PASSWORD_DOWNLOAD = 'DESCARGA';
     const PASSWORD_RESET = 'REINICIA';
     const PRICE_CASH = 10000;
@@ -449,20 +481,15 @@
         const now = new Date();
         const minutes = now.getHours() * 60 + now.getMinutes();
         for (let block of SCHEDULE) {
-            if (minutes >= block.start && minutes < block.end) {
-                return block.shift;
-            }
+            if (minutes >= block.start && minutes < block.end) return block.shift;
         }
         return '';
     }
 
     function autoSelectShift() {
         const detected = getShiftByTime();
-        if (detected) {
-            data.config.shift = detected;
-        } else if (!data.config.shift) {
-            data.config.shift = '08:30 - 11:30 | USAG 2';
-        }
+        if (detected) data.config.shift = detected;
+        else if (!data.config.shift) data.config.shift = '08:30 - 11:30 | USAG 2';
     }
 
     function saveConfig() {
@@ -472,283 +499,230 @@
         saveData();
     }
 
-    function saveData() {
-        localStorage.setItem('torneoJunioDataFinal', JSON.stringify(data));
-    }
+    function saveData() { localStorage.setItem('torneoJunioDataFinal', JSON.stringify(data)); }
 
     function updateUI() {
         document.getElementById('gate-select').value = data.config.gate;
         document.getElementById('shift-select').value = data.config.shift;
         document.getElementById('controller-select').value = data.config.controller;
-
         document.getElementById('count-cash').textContent = data.counts.cash;
         document.getElementById('count-transfer').textContent = data.counts.transfer;
-        const totalPeople = data.counts.cash + data.counts.transfer;
-        document.getElementById('count-total').textContent = totalPeople;
-
-        const totalMoney = (data.counts.cash * PRICE_CASH) + (data.counts.transfer * PRICE_TRANSFER);
-        document.getElementById('money-total').textContent = '$' + totalMoney.toLocaleString('es-AR');
-
-        const btnUndo = document.getElementById('btn-undo');
-        btnUndo.disabled = data.history.length === 0;
-
+        const total = data.counts.cash + data.counts.transfer;
+        document.getElementById('count-total').textContent = total;
+        const money = (data.counts.cash * PRICE_CASH) + (data.counts.transfer * PRICE_TRANSFER);
+        document.getElementById('money-total').textContent = '$' + money.toLocaleString('es-AR');
         if (data.history.length > 0) {
             const last = data.history[data.history.length-1];
-            const methodName = last.method === 'cash' ? 'Efectivo' : 'Transf.';
-            document.getElementById('last-entry-text').textContent = 
-                `Último: ${methodName} ${last.time} (${last.category}) - ${last.gate} - ${last.controller}`;
+            document.getElementById('last-entry-text').textContent = `${last.method === 'cash' ? 'Efectivo' : 'Transf.'} - ${last.controller}`;
+            document.getElementById('last-entry-time').textContent = last.time;
         } else {
-            document.getElementById('last-entry-text').textContent = 'Último: —';
+            document.getElementById('last-entry-text').textContent = 'Esperando registros...';
+            document.getElementById('last-entry-time').textContent = '--:--';
         }
-
         saveData();
     }
 
-    function vibrate() {
-        if (navigator.vibrate) navigator.vibrate(30);
-    }
+    function vibrate() { if (navigator.vibrate) navigator.vibrate(20); }
 
     function register(method) {
         const now = Date.now();
         if (now - lastTap < DEBOUNCE) return;
         lastTap = now;
-
-        if (method === 'cash') data.counts.cash++;
-        else data.counts.transfer++;
-
+        if (method === 'cash') data.counts.cash++; else data.counts.transfer++;
         const timeStr = new Date().toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-        
-        const shiftText = data.config.shift;
-        const category = shiftText.includes('|') ? shiftText.split('|')[1].trim() : shiftText;
-        const currentGate = data.config.gate;
-        const currentController = data.config.controller;
-        const currentShift = data.config.shift;
-
+        const category = data.config.shift.includes('|') ? data.config.shift.split('|')[1].trim() : data.config.shift;
         data.history.push({
-            id: data.history.length + 1,
-            method: method,
-            time: timeStr,
-            category: category,
-            shift: currentShift,
-            gate: currentGate,
-            controller: currentController
+            id: data.history.length + 1, method, time: timeStr, category,
+            shift: data.config.shift, gate: data.config.gate, controller: data.config.controller
         });
-
-        vibrate();
-        updateUI();
-
-        const totalEl = document.getElementById('count-total');
-        totalEl.classList.remove('pulse');
-        void totalEl.offsetWidth;
-        totalEl.classList.add('pulse');
+        vibrate(); updateUI();
     }
 
     function undoLast() {
-        if (data.history.length === 0) return;
+        if (!data.history.length) return;
         const last = data.history.pop();
-        if (last.method === 'cash') data.counts.cash = Math.max(0, data.counts.cash - 1);
-        else data.counts.transfer = Math.max(0, data.counts.transfer - 1);
+        if (last.method === 'cash') data.counts.cash = Math.max(0, data.counts.cash-1);
+        else data.counts.transfer = Math.max(0, data.counts.transfer-1);
         updateUI();
     }
 
-    function resetCounters() {
-        data.counts.cash = 0;
-        data.counts.transfer = 0;
-        data.history = [];
-        updateUI();
-    }
+    function resetCounters() { data.counts = { cash: 0, transfer: 0 }; data.history = []; updateUI(); }
 
-    // === DESCARGA / COMPARTIR ===
-    function askDownloadPassword() {
-        document.getElementById('downloadModal').classList.add('active');
-        document.getElementById('downloadPasswordInput').value = '';
-        document.getElementById('downloadPasswordInput').focus();
-    }
-
-    function closeDownloadModal() {
-        document.getElementById('downloadModal').classList.remove('active');
-    }
+    function askDownloadPassword() { document.getElementById('downloadModal').classList.add('active'); document.getElementById('downloadPasswordInput').value = ''; document.getElementById('downloadPasswordInput').focus(); }
+    function closeDownloadModal() { document.getElementById('downloadModal').classList.remove('active'); }
 
     async function confirmDownload() {
-        const input = document.getElementById('downloadPasswordInput').value;
-        if (input !== PASSWORD_DOWNLOAD) {
-            alert('Clave incorrecta.');
-            document.getElementById('downloadPasswordInput').value = '';
-            document.getElementById('downloadPasswordInput').focus();
-            return;
+        if (document.getElementById('downloadPasswordInput').value !== PASSWORD_DOWNLOAD) {
+            alert('Clave incorrecta.'); return;
         }
-
         closeDownloadModal();
-
         const date = new Date().toLocaleDateString('es-AR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
         const totalCash = data.counts.cash * PRICE_CASH;
         const totalTransfer = data.counts.transfer * PRICE_TRANSFER;
-        const totalPeople = data.counts.cash + data.counts.transfer;
-        const totalMoney = totalCash + totalTransfer;
-
         let filas = '';
-        for (let i = 0; i < data.history.length; i++) {
-            const entry = data.history[i];
-            const metodoBadge = entry.method === 'cash' ? 'Efectivo' : 'Transferencia';
-            const badgeClass = entry.method === 'cash' ? 'cash-badge' : 'transfer-badge';
-            filas += `
-        <tr>
-            <td>${entry.id}</td>
-            <td><span class="${badgeClass}">${metodoBadge}</span></td>
-            <td>${entry.time}</td>
-            <td><span class="category-badge">${entry.category}</span></td>
-            <td>${entry.shift}</td>
-            <td><span class="gate-badge">${entry.gate}</span></td>
-            <td><span class="controller-badge">${entry.controller}</span></td>
-        </tr>`;
+        for (const e of data.history) {
+            filas += `<tr><td>${e.id}</td><td><span class="${e.method==='cash'?'cash-badge':'transfer-badge'}">${e.method==='cash'?'Efectivo':'Transferencia'}</span></td><td>${e.time}</td><td><span class="category-badge">${e.category}</span></td><td>${e.shift}</td><td><span class="gate-badge">${e.gate}</span></td><td><span class="controller-badge">${e.controller}</span></td></tr>`;
         }
-
-        const html = '\uFEFF' + `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Reporte</title>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 30px; background: #f4f6fb; }
-        .report-container { max-width: 950px; margin: auto; background: white; border-radius: 24px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        .header { margin-bottom: 24px; border-bottom: 3px solid #3b82f6; padding-bottom: 16px; }
-        .logo { font-size: 24px; font-weight: 800; color: #3b82f6; }
-        .meta { color: #64748b; font-size: 14px; }
-        h2 { color: #1e293b; margin: 16px 0 8px; }
-        .summary-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .summary-table th { background: #3b82f6; color: white; padding: 12px; text-align: left; font-size: 14px; }
-        .summary-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-weight: 600; }
-        .summary-table tr:last-child td { font-size: 18px; font-weight: 800; color: #10b981; }
-        .detail-table { width: 100%; border-collapse: collapse; font-size: 12px; border-radius: 12px; overflow: hidden; }
-        .detail-table th { background: #10b981; color: white; padding: 10px; text-align: center; }
-        .detail-table td { padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-        .cash-badge { background: #d1fae5; color: #065f46; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
-        .transfer-badge { background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
-        .category-badge { background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
-        .controller-badge { background: #ede9fe; color: #5b21b6; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
-        .gate-badge { background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
-        .footer { margin-top: 28px; text-align: center; color: #94a3b8; font-size: 12px; }
-    </style>
-</head>
-<body>
-<div class="report-container">
-    <div class="header">
-        <div class="logo">🎫 Torneo 27 Junio</div>
-        <div class="meta">${date} · Reporte Final</div>
-    </div>
-
-    <h2>📊 Resumen de Recaudación</h2>
-    <table class="summary-table">
-        <tr><th>Concepto</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th></tr>
-        <tr><td>💵 Efectivo</td><td>${data.counts.cash}</td><td>$${PRICE_CASH.toLocaleString()}</td><td>$${totalCash.toLocaleString()}</td></tr>
-        <tr><td>📱 Transferencia</td><td>${data.counts.transfer}</td><td>$${PRICE_TRANSFER.toLocaleString()}</td><td>$${totalTransfer.toLocaleString()}</td></tr>
-        <tr style="background:#f1f5f9;"><td><strong>👥 Total personas</strong></td><td><strong>${totalPeople}</strong></td><td></td><td></td></tr>
-        <tr><td colspan="3"><strong>💰 TOTAL RECAUDADO</strong></td><td><strong>$${totalMoney.toLocaleString()}</strong></td></tr>
-    </table>
-
-    <h2>📋 Registro Detallado de Ingresos</h2>
-    <table class="detail-table">
-        <tr><th>#</th><th>Método</th><th>Hora exacta</th><th>Categoría</th><th>Turno</th><th>Acceso</th><th>Controlador</th></tr>
-        ${filas}
-    </table>
-    <div class="footer">Generado automáticamente · Torneo 27 de Junio</div>
-</div>
-</body>
-</html>`;
-
+        const html = '\uFEFF<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Reporte</title><style>body{font-family:\'Segoe UI\',Arial,sans-serif;margin:30px;background:#f4f6fb}.report-container{max-width:950px;margin:auto;background:white;border-radius:24px;padding:30px;box-shadow:0 10px 40px rgba(0,0,0,0.1)}.header{margin-bottom:24px;border-bottom:3px solid #3b82f6;padding-bottom:16px}.logo{font-size:24px;font-weight:800;color:#3b82f6}.meta{color:#64748b;font-size:14px}h2{color:#1e293b;margin:16px 0 8px}.summary-table{width:100%;border-collapse:collapse;margin-bottom:28px;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05)}.summary-table th{background:#3b82f6;color:white;padding:12px;text-align:left;font-size:14px}.summary-table td{padding:12px;border-bottom:1px solid #e2e8f0;font-weight:600}.summary-table tr:last-child td{font-size:18px;font-weight:800;color:#10b981}.detail-table{width:100%;border-collapse:collapse;font-size:12px;border-radius:12px;overflow:hidden}.detail-table th{background:#10b981;color:white;padding:10px;text-align:center}.detail-table td{padding:8px;text-align:center;border-bottom:1px solid #e2e8f0}.cash-badge{background:#d1fae5;color:#065f46;padding:4px 12px;border-radius:20px;font-weight:bold}.transfer-badge{background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:20px;font-weight:bold}.category-badge{background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:20px;font-weight:bold}.controller-badge{background:#ede9fe;color:#5b21b6;padding:4px 12px;border-radius:20px;font-weight:bold}.gate-badge{background:#e0f2fe;color:#0369a1;padding:4px 12px;border-radius:20px;font-weight:bold}.footer{margin-top:28px;text-align:center;color:#94a3b8;font-size:12px}</style></head><body><div class="report-container"><div class="header"><div class="logo">🎫 Torneo 27 Junio</div><div class="meta">${date} · Reporte Final</div></div><h2>📊 Resumen de Recaudación</h2><table class="summary-table"><tr><th>Concepto</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th></tr><tr><td>💵 Efectivo</td><td>${data.counts.cash}</td><td>$${PRICE_CASH.toLocaleString()}</td><td>$${totalCash.toLocaleString()}</td></tr><tr><td>📱 Transferencia</td><td>${data.counts.transfer}</td><td>$${PRICE_TRANSFER.toLocaleString()}</td><td>$${totalTransfer.toLocaleString()}</td></tr><tr style="background:#f1f5f9;"><td><strong>👥 Total personas</strong></td><td><strong>${data.counts.cash + data.counts.transfer}</strong></td><td></td><td></td></tr><tr><td colspan="3"><strong>💰 TOTAL RECAUDADO</strong></td><td><strong>$${(totalCash+totalTransfer).toLocaleString()}</strong></td></tr></table><h2>📋 Registro Detallado de Ingresos</h2><table class="detail-table"><tr><th>#</th><th>Método</th><th>Hora exacta</th><th>Categoría</th><th>Turno</th><th>Acceso</th><th>Controlador</th></tr>${filas}</table><div class="footer">Generado automáticamente · Torneo 27 de Junio</div></div></body></html>';
         const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8' });
-        const filename = `Recaudacion_Final.xls`;
-
+        const filename = 'Recaudacion_Final.xls';
         if (navigator.canShare && navigator.canShare({ files: [new File([blob], filename, { type: 'application/vnd.ms-excel' })] })) {
             try {
-                await navigator.share({
-                    files: [new File([blob], filename, { type: 'application/vnd.ms-excel' })],
-                    title: 'Reporte de Recaudación',
-                    text: 'Te envío el reporte final del torneo.'
-                });
-                document.getElementById('sharedModal').classList.add('active');
-                return;
-            } catch (err) {
-                if (err.message.includes('cancel')) return;
-            }
+                await navigator.share({ files: [new File([blob], filename, { type: 'application/vnd.ms-excel' })], title: 'Reporte de Recaudación', text: 'Te envío el reporte final del torneo.' });
+                document.getElementById('sharedModal').classList.add('active'); return;
+            } catch (err) { if (err.message.includes('cancel')) return; }
         }
-
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
+        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
         document.getElementById('savedModal').classList.add('active');
     }
 
-    function closeSharedModal() { document.getElementById('sharedModal').classList.remove('active'); }
-    function closeSavedModal() { document.getElementById('savedModal').classList.remove('active'); }
-
-    // === REINICIAR ===
-    function askResetPassword() {
-        document.getElementById('passwordModal').classList.add('active');
-        document.getElementById('resetPasswordInput').value = '';
-        document.getElementById('resetPasswordInput').focus();
-    }
+    function askResetPassword() { document.getElementById('passwordModal').classList.add('active'); document.getElementById('resetPasswordInput').value = ''; document.getElementById('resetPasswordInput').focus(); }
     function closePasswordModal() { document.getElementById('passwordModal').classList.remove('active'); }
     function confirmReset() {
-        const input = document.getElementById('resetPasswordInput').value;
-        if (input === PASSWORD_RESET) {
-            resetCounters();
-            closePasswordModal();
-            alert('Contadores reiniciados.');
+        if (document.getElementById('resetPasswordInput').value === PASSWORD_RESET) { resetCounters(); closePasswordModal(); alert('Contadores reiniciados.'); }
+        else { alert('Clave incorrecta.'); document.getElementById('resetPasswordInput').value = ''; document.getElementById('resetPasswordInput').focus(); }
+    }
+
+    // ==================== NAVEGACIÓN ====================
+    function switchPage(page) {
+        document.getElementById('page-control').classList.remove('active');
+        document.getElementById('page-consolidator').classList.remove('active');
+        if (page === 'consolidator') {
+            document.getElementById('page-consolidator').classList.add('active');
         } else {
-            alert('Clave incorrecta.');
-            document.getElementById('resetPasswordInput').value = '';
-            document.getElementById('resetPasswordInput').focus();
+            document.getElementById('page-control').classList.add('active');
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('downloadPasswordInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') confirmDownload();
+    // ==================== CONSOLIDADOR ====================
+    let loadedData = [];
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileListDiv = document.getElementById('fileList');
+    const btnGenerate = document.getElementById('btnGenerate');
+    const summaryPreview = document.getElementById('summaryPreview');
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+    const accessKeywords = ['entrada', 'acceso', 'puerta', 'gate'];
+    function isRealController(name) { return name && name.trim() !== '' && !accessKeywords.some(k => name.toLowerCase().includes(k)); }
+    function safeText(el, def = '') { return el ? el.textContent.trim() : def; }
+
+    function handleFiles(files) {
+        loadedData = []; fileListDiv.innerHTML = ''; summaryPreview.innerHTML = ''; btnGenerate.disabled = true; document.getElementById('errorMsg').textContent = '';
+        if (!files.length) return;
+        Array.from(files).forEach(file => {
+            if (!file.name.endsWith('.xls') && !file.name.endsWith('.xlsx')) { document.getElementById('errorMsg').textContent = `"${file.name}" no es válido.`; return; }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const d = extractDataFromHTML(e.target.result, file.name);
+                    if (d.error) { document.getElementById('errorMsg').textContent = d.error; return; }
+                    loadedData.push(d); updateFileList();
+                } catch (ex) { document.getElementById('errorMsg').textContent = `Error: ${ex.message}`; }
+            };
+            reader.readAsText(file);
         });
-        document.getElementById('resetPasswordInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') confirmReset();
+    }
+
+    function extractDataFromHTML(htmlText, fileName) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+        const metaDiv = doc.querySelector('.meta');
+        let gate = ''; if (metaDiv) { const lines = metaDiv.innerText.split('\n').filter(l => l.trim()); if (lines.length > 1) gate = lines[1].split('·')[0].trim(); }
+        const summaryTable = doc.querySelector('.summary-table');
+        if (!summaryTable) return { error: `No se encontró tabla en "${fileName}".` };
+        const rows = summaryTable.querySelectorAll('tr');
+        let resumen = { efectivoCant: 0, transferenciaCant: 0, totalPersonas: 0, totalRecaudado: 0 };
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 2) {
+                const concepto = safeText(cells[0]);
+                const cantidad = parseInt(safeText(cells[1]).replace(/\D/g, '')) || 0;
+                if (concepto.includes('Efectivo')) resumen.efectivoCant = cantidad;
+                else if (concepto.includes('Transferencia')) resumen.transferenciaCant = cantidad;
+                else if (concepto.includes('Total personas')) resumen.totalPersonas = cantidad;
+                else if (concepto.includes('TOTAL RECAUDADO')) {
+                    const mt = cells.length >= 4 ? safeText(cells[3]) : safeText(cells[1]);
+                    resumen.totalRecaudado = parseInt(mt.replace(/[^0-9]/g, '')) || 0;
+                }
+            }
         });
+        const detailTable = doc.querySelector('.detail-table');
+        let detalles = [];
+        if (detailTable) {
+            const headers = detailTable.querySelectorAll('th');
+            const headerTexts = Array.from(headers).map(th => safeText(th));
+            const hasAccess = headerTexts.includes('Acceso');
+            const hasController = headerTexts.includes('Controlador');
+            detailTable.querySelectorAll('tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (!cells.length || !safeText(cells[0])) return;
+                let acceso = '', controladorRaw = '';
+                if (hasAccess && hasController && cells.length >= 7) { acceso = safeText(cells[5]); controladorRaw = safeText(cells[6]); }
+                else if (hasController && cells.length >= 6) { controladorRaw = safeText(cells[5]); }
+                else if (hasAccess && cells.length >= 6) { acceso = safeText(cells[5]); }
+                let controladorFinal = controladorRaw;
+                if (!isRealController(controladorRaw)) { controladorFinal = 'No especificado'; if (!acceso && controladorRaw && accessKeywords.some(k => controladorRaw.toLowerCase().includes(k))) acceso = controladorRaw; }
+                if (!acceso) acceso = gate || '';
+                detalles.push({
+                    id: safeText(cells[0]), metodo: safeText(cells[1]), hora: safeText(cells[2]),
+                    categoria: safeText(cells[3]), turno: safeText(cells[4]), acceso, controlador: controladorFinal
+                });
+            });
+        }
+        return { fileName, gate, resumen, detalles };
+    }
+
+    function updateFileList() {
+        fileListDiv.innerHTML = ''; let totalG = 0, totalP = 0;
+        loadedData.forEach((d, i) => {
+            totalG += d.resumen.totalRecaudado; totalP += d.resumen.totalPersonas;
+            const div = document.createElement('div'); div.className = 'file-item';
+            div.innerHTML = `<span class="name">📄 ${d.fileName}</span><span class="stats">${d.detalles.length} ent. · $${d.resumen.totalRecaudado.toLocaleString()}</span><button class="btn-remove" onclick="removeFile(${i})">✕</button>`;
+            fileListDiv.appendChild(div);
+        });
+        if (loadedData.length) {
+            summaryPreview.innerHTML = `<h3 style="margin-bottom:6px;">Vista previa</h3><table><tr><th>Archivo</th><th>Personas</th><th>Recaudado</th></tr>${loadedData.map(d => `<tr><td>${d.fileName}</td><td>${d.resumen.totalPersonas}</td><td>$${d.resumen.totalRecaudado.toLocaleString()}</td></tr>`).join('')}<tr style="font-weight:bold;"><td colspan="1">TOTAL</td><td>${totalP}</td><td>$${totalG.toLocaleString()}</td></tr></table>`;
+            btnGenerate.disabled = false;
+        } else { btnGenerate.disabled = true; }
+    }
+
+    function removeFile(i) { loadedData.splice(i, 1); updateFileList(); }
+
+    function generateConsolidatedReport() {
+        if (!loadedData.length) return;
+        const totalCash = loadedData.reduce((s, d) => s + d.resumen.efectivoCant, 0);
+        const totalTransfer = loadedData.reduce((s, d) => s + d.resumen.transferenciaCant, 0);
+        const totalMoney = loadedData.reduce((s, d) => s + d.resumen.totalRecaudado, 0);
+        let all = []; let gid = 1;
+        loadedData.forEach(d => { d.detalles.forEach(det => { all.push({...det, id: gid++, archivo: d.fileName}); }); });
+        const turnoMap = {}; all.forEach(d => { const k = d.turno || 'Sin turno'; if (!turnoMap[k]) turnoMap[k] = { c:0, r:0 }; turnoMap[k].c++; turnoMap[k].r += d.metodo.includes('Efectivo') ? 10000 : 10007; });
+        const ctrlMap = {}; all.forEach(d => { const k = d.controlador || 'No especificado'; if (!ctrlMap[k]) ctrlMap[k] = { c:0, r:0 }; ctrlMap[k].c++; ctrlMap[k].r += d.metodo.includes('Efectivo') ? 10000 : 10007; });
+        const date = new Date().toLocaleDateString('es-AR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+        const html = '\uFEFF<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Consolidado</title><style>body{font-family:\'Segoe UI\',Arial,sans-serif;margin:30px;background:#f4f6fb}.report-container{max-width:1100px;margin:auto;background:white;border-radius:24px;padding:30px;box-shadow:0 10px 40px rgba(0,0,0,0.1)}.header{margin-bottom:24px;border-bottom:3px solid #3b82f6;padding-bottom:16px}.logo{font-size:24px;font-weight:800;color:#3b82f6}h2{color:#1e293b;margin:16px 0 8px}table{width:100%;border-collapse:collapse;margin-bottom:20px;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05)}th{background:#3b82f6;color:white;padding:10px;text-align:left;font-size:13px}td{padding:8px;border-bottom:1px solid #e2e8f0;font-size:13px}.badge{padding:3px 10px;border-radius:20px;font-weight:bold;font-size:11px}.cash{background:#d1fae5;color:#065f46}.transfer{background:#dbeafe;color:#1e40af}.unspecified{background:#fee2e2;color:#991b1b}.footer{margin-top:28px;text-align:center;color:#94a3b8;font-size:12px}</style></head><body><div class="report-container"><div class="header"><div class="logo">🎫 Torneo 27 Junio – Consolidado</div><div style="color:#64748b;">${date} · Archivos: ${loadedData.length}</div></div><h2>📊 Resumen General</h2><table><tr><th>Concepto</th><th>Cantidad</th><th>Monto</th></tr><tr><td>💵 Efectivo</td><td>${totalCash}</td><td>$${(totalCash*10000).toLocaleString()}</td></tr><tr><td>📱 Transferencia</td><td>${totalTransfer}</td><td>$${(totalTransfer*10007).toLocaleString()}</td></tr><tr style="font-weight:bold;background:#f1f5f9;"><td>👥 Total</td><td>${totalCash+totalTransfer}</td><td></td></tr><tr style="font-weight:bold;"><td>💰 TOTAL</td><td></td><td>$${totalMoney.toLocaleString()}</td></tr></table><h2>📋 Detalle</h2><table><tr><th>#</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Turno</th><th>Acceso</th><th>Controlador</th><th>Archivo</th></tr>${all.map(d => `<tr><td>${d.id}</td><td><span class="badge ${d.metodo.includes('Efectivo')?'cash':'transfer'}">${d.metodo}</span></td><td>${d.hora}</td><td>${d.categoria}</td><td>${d.turno}</td><td>${d.acceso}</td><td>${d.controlador==='No especificado'?'<span class="badge unspecified">No especificado</span>':d.controlador}</td><td style="font-size:11px;color:#64748b;">${d.archivo}</td></tr>`).join('')}</table><h2>🏷️ Por Turno</h2><table><tr><th>Turno</th><th>Cant.</th><th>Recaudado</th></tr>${Object.entries(turnoMap).map(([t,i]) => `<tr><td>${t}</td><td>${i.c}</td><td>$${i.r.toLocaleString()}</td></tr>`).join('')}</table><h2>👤 Por Controlador</h2><table><tr><th>Controlador</th><th>Cant.</th><th>Recaudado</th></tr>${Object.entries(ctrlMap).map(([c,i]) => `<tr><td>${c==='No especificado'?'⚠️ No especificado':c}</td><td>${i.c}</td><td>$${i.r.toLocaleString()}</td></tr>`).join('')}</table><div class="footer">Generado automáticamente</div></div></body></html>';
+        const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Reporte_Consolidado.xls'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+
+    // ==================== INICIALIZACIÓN ====================
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('downloadPasswordInput').addEventListener('keydown', e => { if (e.key==='Enter') confirmDownload(); });
+        document.getElementById('resetPasswordInput').addEventListener('keydown', e => { if (e.key==='Enter') confirmReset(); });
     });
 
-    function updateClock() {
-        document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    function toggleDark() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkModeTorneo', document.body.classList.contains('dark-mode'));
-    }
-    if (localStorage.getItem('darkModeTorneo') === 'true') document.body.classList.add('dark-mode');
+    function updateClock() { document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-AR', { hour12: false }); }
+    setInterval(updateClock, 1000); updateClock();
 
     function showHelp() { document.getElementById('helpModal').classList.add('active'); }
-    function closeHelp() { document.getElementById('helpModal').classList.remove('active'); }
-    document.getElementById('helpModal').addEventListener('click', function(e) {
-        if (e.target === this) closeHelp();
-    });
-    document.getElementById('downloadModal').addEventListener('click', function(e) {
-        if (e.target === this) closeDownloadModal();
-    });
-    document.getElementById('passwordModal').addEventListener('click', function(e) {
-        if (e.target === this) closePasswordModal();
-    });
-    document.getElementById('savedModal').addEventListener('click', function(e) {
-        if (e.target === this) closeSavedModal();
-    });
-    document.getElementById('sharedModal').addEventListener('click', function(e) {
-        if (e.target === this) closeSharedModal();
+    ['downloadModal','passwordModal','savedModal','sharedModal','helpModal'].forEach(id => {
+        document.getElementById(id).addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
     });
 
-    autoSelectShift();
-    updateUI();
+    autoSelectShift(); updateUI();
 </script>
 </body>
 </html>
