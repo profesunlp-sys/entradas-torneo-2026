@@ -184,7 +184,7 @@
     }
     function applyAutoShift() { let a = getShiftByTime(); if (a) { appData.config.shift = a; document.getElementById('shift-select').value = a; appData.autoShiftEnabled = true; saveData(); } }
     function userManuallyChangedShift() { appData.autoShiftEnabled = false; }
-    function saveData() { localStorage.setItem('torneoJunioData', JSON.stringify(appData)); updateUI(); }
+    function saveData() { localStorage.setItem('torneoJunioData', JSON.stringify(appData)); }
     function nowTime() { return new Date().toLocaleTimeString('es-AR'); }
     function updateUI() {
         document.getElementById('gate-select').value = appData.config.gate;
@@ -204,7 +204,6 @@
         document.getElementById('report-lock-badge').style.display = appData.reportDownloaded ? 'block' : 'none';
         let last = [...appData.history].reverse().find(h => h.type === 'entry' || h.type === 'anulacion');
         if (last) document.getElementById('last-entry-text').innerHTML = last.type === 'entry' ? `✅ ${last.method === 'cash' ? 'Efectivo' : 'Transferencia'} ${last.time}` : `↩ Anulación ${last.time}`;
-        saveData();
     }
     function saveConfig() { appData.config.gate = document.getElementById('gate-select').value; appData.config.shift = document.getElementById('shift-select').value; appData.config.controller = document.getElementById('controller-select').value; saveData(); }
     let lastTap = 0;
@@ -254,19 +253,34 @@
             if (ev.type === 'entry') rows += `<tr><td>${ev.id}</td><td>${ev.method === 'cash' ? 'Efectivo' : 'Transferencia'}${ev.anulled ? ' ANULADO' : ''}</td><td>${ev.time}</td><td>${ev.category}</td><td>${ev.gate}</td><td>${ev.controller}</td></tr>`;
             else rows += `<tr style="background:#fff3e0;"><td colspan="6">↩ ANULACIÓN de #${ev.originalId} - ${ev.time}</td></tr>`;
         });
-        _reporteHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte Torneo</title><style>body{font-family:sans-serif;padding:20px;}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px;font-size:12px;}th{background:#3b82f6;color:white;}</style></head><body><h3>Reporte Torneo 27 Junio</h3><p>Acceso: ${appData.config.gate} | Controlador: ${appData.config.controller}</p><p>Efectivo: ${appData.counts.cash} | Transferencia: ${appData.counts.transfer}</p><p><strong>Total: $${(totalCash+totalTrans).toLocaleString('es-AR')}</strong></p><h4>Detalle</h4><tr><th>ID</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Acceso</th><th>Controlador</th> </tr>${rows}</table><p><small>Generado: ${new Date().toLocaleString('es-AR')}</small></p></body></html>`;
+        _reporteHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte Torneo</title><style>body{font-family:sans-serif;padding:20px;}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px;font-size:12px;}th{background:#3b82f6;color:white;}</style></head><body><h3>Reporte Torneo 27 Junio</h3><p>Acceso: ${appData.config.gate} | Controlador: ${appData.config.controller}</p><p>Efectivo: ${appData.counts.cash} | Transferencia: ${appData.counts.transfer}</p><p><strong>Total: $${(totalCash+totalTrans).toLocaleString('es-AR')}</strong></p><h4>Detalle</h4><table><tr><th>ID</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Acceso</th><th>Controlador</th></tr>${rows}</table><p><small>Generado: ${new Date().toLocaleString('es-AR')}</small></p></body></html>`;
         _reporteTexto = `REPORTE TORNEO 27 JUNIO\nAcceso: ${appData.config.gate} | Controlador: ${appData.config.controller}\nEfectivo: ${appData.counts.cash} → $${totalCash.toLocaleString('es-AR')}\nTransferencia: ${appData.counts.transfer} → $${totalTrans.toLocaleString('es-AR')}\nTOTAL: $${(totalCash+totalTrans).toLocaleString('es-AR')}\nGenerado: ${new Date().toLocaleString('es-AR')}`;
         openModal('reporteModal');
     }
     function descargarReporte() {
         const filename = `Reporte_${appData.config.gate.replace(/\s/g,'_')}_${appData.sessionId}.xls`;
         try {
-            const a = document.createElement('a');
-            a.href = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(_reporteHTML);
-            a.download = filename; a.style.display = 'none';
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
-            closeModal('reporteModal'); setTimeout(() => openModal('savedModal'), 400);
-        } catch(e) { const w = window.open('', '_blank'); if (w) { w.document.write(_reporteHTML); w.document.close(); } }
+            const blob = new Blob(
+                [_reporteHTML],
+                { type: 'application/vnd.ms-excel;charset=utf-8;' }
+            );
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = filename;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+                document.body.removeChild(link);
+            }, 100);
+            closeModal('reporteModal');
+            setTimeout(() => openModal('savedModal'), 400);
+        } catch(e) {
+            console.error(e);
+            alert('No se pudo descargar el reporte');
+        }
     }
     function copiarReporte() {
         if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(_reporteTexto).then(() => { alert('✅ Copiado'); closeModal('reporteModal'); }).catch(() => _copiarFallback()); }
@@ -340,7 +354,7 @@
         // Generar archivo consolidado (Excel)
         let allRows = '';
         datos.forEach(d => { d.filas.forEach(f => { allRows += `<tr><td>${f.id}</td><td>${f.metodo}</td><td>${f.hora}</td><td>${f.categoria}</td><td>${f.acceso}</td><td>${f.controlador}</td></tr>`; }); });
-        const consolidadoHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Consolidado Torneo</title><style>body{font-family:sans-serif;padding:20px;}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px;}</style></head><body><h3>Reporte Consolidado - Torneo 27 Junio</h3><p>Total Efectivo: ${totalEfectivo} | Total Transferencia: ${totalTransfer}</p><p><strong>Recaudado total: $${totalRecaudado.toLocaleString('es-AR')}</strong></p><h4>Detalle de todas las entradas</h4><table><th>ID</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Acceso</th><th>Controlador</th></tr>${allRows}</table><p><small>Generado: ${new Date().toLocaleString('es-AR')}</small></p></body></html>`;
+        const consolidadoHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Consolidado Torneo</title><style>body{font-family:sans-serif;padding:20px;}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px;}</style></head><body><h3>Reporte Consolidado - Torneo 27 Junio</h3><p>Total Efectivo: ${totalEfectivo} | Total Transferencia: ${totalTransfer}</p><p><strong>Recaudado total: $${totalRecaudado.toLocaleString('es-AR')}</strong></p><h4>Detalle de todas las entradas</h4><table><tr><th>ID</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Acceso</th><th>Controlador</th></tr>${allRows}</table><p><small>Generado: ${new Date().toLocaleString('es-AR')}</small></p></body></html>`;
         const blob = new Blob([consolidadoHTML], { type: 'application/vnd.ms-excel' });
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Consolidado_Torneo_${new Date().toISOString().slice(0,19)}.xls`; a.click(); URL.revokeObjectURL(a.href);
         document.getElementById('btnGenerate').disabled = false;
