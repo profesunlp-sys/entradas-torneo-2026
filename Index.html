@@ -51,7 +51,7 @@
             max-height: 100vh;
         }
 
-        /* ===== NAV SUPERIOR: UNA SOLA LÍNEA ===== */
+        /* ===== NAV SUPERIOR: UNA SOLA LÍNEA FORZADA ===== */
         .global-nav {
             flex-shrink: 0;
             background: var(--card);
@@ -142,7 +142,7 @@
             display: block;
         }
 
-        /* ===== TRES SELECTS EN UNA SOLA LÍNEA ===== */
+        /* ===== TRES SELECTS EN UNA SOLA LÍNEA: COMPACTOS ===== */
         .config-row-three {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
@@ -496,7 +496,9 @@
                     <h4 style="color:var(--primary);margin-bottom:8px;">📊 Consolidador</h4>
                     <div class="drop-zone" id="dropZone">
                         <p style="font-size:12px;">📂 Arrastrá archivos .xls</p>
-                        <label style="background:var(--primary);color:white;padding:4px 12px;border-radius:40px;display:inline-block;margin-top:6px;cursor:pointer;font-size:11px;">Seleccionar<input type="file" id="fileInput" multiple accept=".xls,.xlsx" style="display:none;"></label>
+                        <label style="background:var(--primary);color:white;padding:4px 12px;border-radius:40px;display:inline-block;margin-top:6px;cursor:pointer;font-size:11px;">Seleccionar
+                            <input type="file" id="fileInput" multiple accept=".xls,.xlsx" style="display:none;">
+                        </label>
                     </div>
                     <div id="fileList"></div>
                     <div id="summaryPreview"></div>
@@ -512,7 +514,7 @@
 <div class="modal" id="downloadModal"><div class="modal-content"><h4>🔒 Descargar</h4><input type="password" id="downloadPasswordInput" placeholder="Clave DESCARGA"><div class="modal-buttons"><button class="btn-cancel" onclick="closeModal('downloadModal')">Cancelar</button><button class="btn-safe" onclick="confirmDownload()">Continuar</button></div></div></div>
 <div class="modal" id="undoAfterReportModal"><div class="modal-content"><h4>⚠️ Anulación post-reporte</h4><div class="modal-warning-box">Requiere clave supervisor (DESCARGA)</div><input type="password" id="undoAfterReportInput" placeholder="Clave"><div class="modal-buttons"><button class="btn-cancel" onclick="closeModal('undoAfterReportModal')">Cancelar</button><button class="btn-confirm" onclick="confirmUndoAfterReport()">Autorizar</button></div></div></div>
 <div class="modal" id="sharedModal"><div class="modal-content"><h4>✅ Listo</h4><button class="btn-ok" onclick="closeModal('sharedModal')">Cerrar</button></div></div>
-<div class="modal" id="savedModal"><div class="modal-content"><h4>✅ Reporte guardado</h4><button class="btn-ok" onclick="closeModal('savedModal')">OK</button></div></div>
+<div class="modal" id="savedModal"><div class="modal-content"><h4>✅ Reporte descargado</h4><p style="font-size:12px;">Revisá tu carpeta de Descargas.<br>Si no aparece, abrí otra pestaña y probá de nuevo.</p><button class="btn-ok" onclick="closeModal('savedModal')">OK</button></div></div>
 <div class="modal" id="helpModal"><div class="modal-content"><h4>📘 Ayuda</h4><p style="font-size:11px;">Turno auto-según hora. Botón ⏰ actualiza. Deshacer libre antes del 1er reporte, luego clave DESCARGA. Reiniciar: REINICIA.</p><button class="btn-ok" onclick="closeModal('helpModal')">Entendido</button></div></div>
 <div class="modal" id="passwordModal"><div class="modal-content"><h4>🔒 Reiniciar</h4><input type="password" id="resetPasswordInput" placeholder="Clave REINICIA"><div class="modal-buttons"><button class="btn-cancel" onclick="closeModal('passwordModal')">Cancelar</button><button class="btn-confirm" onclick="confirmReset()">Reiniciar</button></div></div></div>
 
@@ -658,47 +660,71 @@
         alert('Sesión reiniciada');
     }
 
-    function askDownloadPassword() { openModal('downloadModal'); document.getElementById('downloadPasswordInput').focus(); }
+    // ==================== FUNCIÓN DE DESCARGA MEJORADA ====================
+    function askDownloadPassword() { 
+        openModal('downloadModal'); 
+        document.getElementById('downloadPasswordInput').focus(); 
+    }
+
     function confirmDownload() {
-        if (document.getElementById('downloadPasswordInput').value !== PASS_SUPERVISOR) { alert('Clave incorrecta'); return; }
+        if (document.getElementById('downloadPasswordInput').value !== PASS_SUPERVISOR) { 
+            alert('Clave incorrecta'); 
+            return; 
+        }
         closeModal('downloadModal');
+        
         appData.reportDownloaded = true;
         appData.reportCount++;
         saveData();
-
+        
         let totalCash = appData.counts.cash * PRICE_CASH;
         let totalTrans = appData.counts.transfer * PRICE_TRANSFER;
         let rows = '';
         appData.history.forEach(ev => {
             if (ev.type === 'entry') {
-                rows += `<tr><td style="padding:4px">${ev.id}</td><td>${ev.method === 'cash' ? 'Efectivo' : 'Transferencia'}${ev.anulled ? ' ANULADO' : ''}</td><td>${ev.time}</td><td>${ev.category}</td><td>${ev.gate}</td><td>${ev.controller}</td></tr>`;
+                rows += `<tr>
+                            <td style="padding:4px">${ev.id}</td>
+                            <td>${ev.method === 'cash' ? 'Efectivo' : 'Transferencia'}${ev.anulled ? ' ANULADO' : ''}</td>
+                            <td>${ev.time}</td>
+                            <td>${ev.category}</td>
+                            <td>${ev.gate}</td>
+                            <td>${ev.controller}</td>
+                         </tr>`;
             } else {
-                rows += `<tr style="background:#fff3e0;"><td colspan="6">↩ ANULACIÓN de #${ev.originalId} - ${ev.time}</td></tr>`;
+                rows += `<tr style="background:#fff3e0;">
+                            <td colspan="6">↩ ANULACIÓN de #${ev.originalId} - ${ev.time}</td>
+                         </tr>`;
             }
         });
+        
         let html = `<!DOCTYPE html>
         <html>
         <head><meta charset="UTF-8"><title>Reporte Torneo</title>
-        <style>body{font-family:sans-serif;padding:20px;}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px;font-size:12px;}</style>
+        <style>
+            body{font-family:sans-serif;padding:20px;}
+            table{border-collapse:collapse;width:100%}
+            th,td{border:1px solid #ccc;padding:6px;font-size:12px;text-align:left}
+            th{background:#3b82f6;color:white;}
+        </style>
         </head>
         <body>
-        <h3>Reporte Torneo 27 Junio</h3>
-        <p>Acceso: ${appData.config.gate} | Controlador: ${appData.config.controller}</p>
-        <p>Efectivo: ${appData.counts.cash} | Transferencia: ${appData.counts.transfer}</p>
-        <p><strong>Total recaudado: $${(totalCash+totalTrans).toLocaleString()}</strong></p>
-        <h4>Detalle completo</h4>
-        <table>
-        <tr><th>ID</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Acceso</th><th>Controlador</th></tr>
-        ${rows}
-        </table>
+            <h3>Reporte Torneo 27 Junio</h3>
+            <p>Acceso: ${appData.config.gate} | Controlador: ${appData.config.controller}</p>
+            <p>Efectivo: ${appData.counts.cash} | Transferencia: ${appData.counts.transfer}</p>
+            <p><strong>Total recaudado: $${(totalCash+totalTrans).toLocaleString()}</strong></p>
+            <h4>Detalle completo</h4>
+            <table>
+                <tr><th>ID</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Acceso</th><th>Controlador</th></tr>
+                ${rows}
+            </table>
+            <p><small>Generado el ${new Date().toLocaleString()}</small></p>
         </body>
         </html>`;
-
-        // Crear el blob y forzar la descarga en Chrome para PC
-        const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
-        const filename = `Reporte_${appData.config.gate}_${appData.sessionId}_N${appData.reportCount}.xls`;
         
-        // Método robusto para Chrome: crear un enlace y hacer clic
+        const filename = `Reporte_${appData.config.gate}_${appData.sessionId}_N${appData.reportCount}.xls`;
+        const blob = new Blob([html], { type: 'application/vnd.ms-excel' }); // Mantenemos el tipo original
+        
+        // Forzar descarga sin usar share en PC
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.href = url;
@@ -706,39 +732,54 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        URL.revokeObjectURL(url);
         
+        // Liberar memoria después de un breve retraso
+        setTimeout(() => URL.revokeObjectURL(url), 150);
+        
+        // Mostrar modal de éxito
         openModal('savedModal');
     }
 
-    // Consolidador
+    // ========== CONSOLIDADOR (sin cambios) ==========
     let loadedFiles = [];
     function handleFiles(files) {
         loadedFiles = Array.from(files);
-        document.getElementById('fileList').innerHTML = loadedFiles.map((f,i) => `<div class="file-item">📄 ${f.name}<button class="btn-remove" onclick="removeFile(${i})" style="background:var(--danger);color:white;border:none;border-radius:30px;padding:0 6px;">✕</button></div>`).join('');
-        document.getElementById('btnGenerate').disabled = loadedFiles.length === 0;
-        if(loadedFiles.length) document.getElementById('summaryPreview').innerHTML = '<p style="font-size:11px;">✅ Archivos listos para consolidar</p>';
+        const fileListDiv = document.getElementById('fileList');
+        fileListDiv.innerHTML = loadedFiles.map((f, idx) => `
+            <div class="file-item">
+                📄 ${f.name}
+                <button class="btn-remove" onclick="removeFile(${idx})" style="background:var(--danger);color:white;border:none;border-radius:30px;padding:0 6px;">✕</button>
+            </div>
+        `).join('');
+        const btnGenerate = document.getElementById('btnGenerate');
+        btnGenerate.disabled = loadedFiles.length === 0;
+        const summaryDiv = document.getElementById('summaryPreview');
+        if (loadedFiles.length) {
+            summaryDiv.innerHTML = '<p style="font-size:11px;">✅ Archivos listos para consolidar</p>';
+        } else {
+            summaryDiv.innerHTML = '';
+        }
     }
-    function removeFile(idx) { loadedFiles.splice(idx,1); handleFiles(loadedFiles); }
+    function removeFile(idx) { loadedFiles.splice(idx, 1); handleFiles(loadedFiles); }
     function generateConsolidatedReport() {
-        if(loadedFiles.length === 0) return;
+        if (loadedFiles.length === 0) return;
         alert('Simulación: Consolidado generado. En producción procesaría los .xls reales.');
-        let blob = new Blob(['Reporte consolidado'], {type:'text/plain'});
+        let blob = new Blob(['Reporte consolidado'], { type: 'text/plain' });
         let a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'Consolidado_Torneo.xls';
         a.click();
         URL.revokeObjectURL(a.href);
     }
-
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
-    if(dropZone) {
+    if (dropZone) {
         dropZone.addEventListener('dragover', e => e.preventDefault());
         dropZone.addEventListener('drop', e => { e.preventDefault(); handleFiles(e.dataTransfer.files); });
     }
-    if(fileInput) fileInput.addEventListener('change', e => handleFiles(e.target.files));
+    if (fileInput) fileInput.addEventListener('change', e => handleFiles(e.target.files));
 
+    // ========== FUNCIONES GENERALES ==========
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     function showHelp() { openModal('helpModal'); }
@@ -750,16 +791,16 @@
     }
     function toggleDark() { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkModeTorneo', document.body.classList.contains('dark-mode') ? '1' : '0'); }
     if (localStorage.getItem('darkModeTorneo') === '1') document.body.classList.add('dark-mode');
-
     function updateClock() { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString('es-AR'); }
     setInterval(updateClock, 1000);
     updateClock();
-
-    if (appData.autoShiftEnabled !== false) {
-        let autoShift = getShiftByTime();
-        if (autoShift) appData.config.shift = autoShift;
-    }
+    if (appData.autoShiftEnabled !== false) { let autoShift = getShiftByTime(); if (autoShift) appData.config.shift = autoShift; }
     updateUI();
+    
+    // Cerrar modales al hacer clic fuera
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) { if (e.target === this) closeModal(this.id); });
+    });
 </script>
 </body>
 </html>
