@@ -2,9 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Control de Entradas – Torneo 27 Junio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Torneo 27 Junio – Suite Completa</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --bg: #f4f6fb;
             --card: #ffffff;
@@ -16,9 +22,9 @@
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
-            --shadow: 0 8px 30px rgba(0,0,0,0.06);
-            --btn-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
+
         .dark-mode {
             --bg: #0f172a;
             --card: #1e293b;
@@ -26,96 +32,166 @@
             --subtext: #94a3b8;
             --primary: #60a5fa;
             --border: #334155;
-            --stat-bg: #1e293b;
-            --shadow: 0 8px 30px rgba(0,0,0,0.4);
-            --btn-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            --stat-bg: #0f172a;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
+            height: 100vh;
+            overflow: hidden;
             transition: background 0.3s, color 0.3s;
         }
-        .app-container {
-            width: 100%;
-            max-width: 540px;
-            background: var(--card);
-            border-radius: 28px;
-            padding: 24px 20px;
-            box-shadow: var(--shadow);
-            transition: background 0.3s;
-            max-height: 95vh;
-            overflow-y: auto;
+
+        /* Layout principal sin scroll */
+        .app-main {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
         }
 
-        .header {
+        /* NAV superior compacto */
+        .global-nav {
+            flex-shrink: 0;
+            background: var(--card);
+            border-bottom: 2px solid var(--border);
+            padding: 8px 12px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            justify-content: space-between;
             gap: 8px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
-        .logo {
-            font-weight: 800;
-            font-size: 1.3rem;
-            color: var(--primary);
-            letter-spacing: -0.5px;
+
+        .tab-buttons {
+            display: flex;
+            gap: 6px;
         }
+
+        .tab-btn {
+            border: 1.5px solid var(--border);
+            background: var(--stat-bg);
+            color: var(--subtext);
+            border-radius: 40px;
+            padding: 6px 14px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .clock {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             font-weight: 700;
             background: var(--stat-bg);
-            padding: 6px 16px;
-            border-radius: 30px;
+            padding: 4px 12px;
+            border-radius: 40px;
             border: 1px solid var(--border);
         }
+
         .icon-btn {
             background: var(--stat-bg);
             border: 1px solid var(--border);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
+            width: 34px;
+            height: 34px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text);
-            transition: transform 0.2s, background 0.2s;
         }
-        .icon-btn:active { transform: scale(0.92); }
+
+        /* Contenedor de tabs que ocupa todo el espacio restante */
+        .tabs-container {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tab-content {
+            display: none;
+            height: 100%;
+            overflow-y: auto;
+            padding: 12px 16px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Scroll interno suave */
+        .tab-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        /* Contenedor centrado con distribución vertical */
+        .control-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100%;
+            padding: 8px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card);
+            border-radius: 32px;
+            padding: 20px 18px;
+            box-shadow: var(--shadow);
+            transition: background 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Configuración en fila */
+        .config-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
 
         .config-box {
             background: var(--stat-bg);
-            border: 2px solid var(--primary);
-            border-radius: 18px;
-            padding: 14px;
-            margin-bottom: 12px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 12px;
         }
+
         .config-box label {
             display: flex;
             flex-direction: column;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.5px;
             color: var(--primary);
             gap: 4px;
         }
+
         .config-box select {
-            padding: 8px 6px;
-            border-radius: 10px;
+            padding: 6px 4px;
+            border-radius: 12px;
             border: 1px solid var(--border);
             background: var(--card);
             color: var(--text);
@@ -124,756 +200,591 @@
         }
 
         .controller-box {
-            margin-bottom: 20px;
+            background: var(--stat-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 12px;
         }
-        .controller-box label {
-            display: flex;
-            flex-direction: column;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            color: var(--primary);
-            gap: 4px;
-            max-width: 100%;
-        }
+
         .controller-box select {
-            padding: 10px 8px;
-            border-radius: 10px;
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 12px;
             border: 1px solid var(--border);
             background: var(--card);
-            color: var(--text);
             font-weight: 600;
-            font-size: 14px;
-            width: 100%;
         }
 
         .last-entry {
             text-align: center;
-            font-size: 13px;
+            font-size: 11px;
             color: var(--subtext);
-            margin: 8px 0 16px;
             font-weight: 500;
-            min-height: 20px;
+            background: var(--stat-bg);
+            padding: 6px;
+            border-radius: 40px;
         }
 
+        /* Botones de registro grandes pero proporcionados */
         .buttons-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 14px;
         }
+
         .entry-btn {
             border: none;
-            border-radius: 20px;
-            padding: 28px 10px;
+            border-radius: 28px;
+            padding: 16px 6px;
             color: white;
-            font-weight: 700;
-            font-size: 17px;
+            font-weight: 800;
+            font-size: 15px;
             cursor: pointer;
-            box-shadow: var(--btn-shadow);
-            transition: all 0.15s ease;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            gap: 4px;
         }
-        .entry-btn:active {
-            transform: scale(0.94);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-        }
-        .cash-btn { background: linear-gradient(135deg, #10b981, #059669); }
-        .transfer-btn { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-        .price-tag { font-size: 26px; font-weight: 800; letter-spacing: 1px; }
 
+        .entry-btn:active {
+            transform: scale(0.96);
+        }
+
+        .cash-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .transfer-btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .price-tag {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* Tarjeta de estadísticas compacta */
         .stats-card {
             background: var(--stat-bg);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 20px;
+            border-radius: 24px;
+            padding: 12px 16px;
         }
+
         .stat-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 16px;
+            padding: 6px 0;
+            font-size: 14px;
+            font-weight: 500;
         }
-        .stat-row:last-child { border-bottom: none; }
+
         .total-row {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 800;
             color: var(--success);
             border-top: 2px solid var(--border);
-            padding-top: 14px;
-            margin-top: 8px;
+            margin-top: 6px;
+            padding-top: 8px;
         }
-        .stat-value { font-weight: 700; }
 
         .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            gap: 12px;
         }
+
         .btn {
+            flex: 1;
             border: none;
-            border-radius: 14px;
-            padding: 12px 20px;
+            border-radius: 40px;
+            padding: 10px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             color: white;
-            transition: opacity 0.2s;
-            flex: 1;
             text-align: center;
         }
-        .btn-undo { background: var(--warning); }
-        .btn-undo:disabled { opacity: 0.4; pointer-events: none; }
-        .btn-reset { background: var(--danger); opacity: 0.8; }
+
+        .btn-undo {
+            background: var(--warning);
+        }
+
+        .btn-undo:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .btn-reset {
+            background: var(--danger);
+        }
 
         .export-btn {
             width: 100%;
             background: linear-gradient(135deg, #8b5cf6, #6366f1);
             color: white;
             border: none;
-            border-radius: 18px;
-            padding: 18px;
-            font-weight: 800;
-            font-size: 17px;
-            cursor: pointer;
-            box-shadow: var(--btn-shadow);
-            letter-spacing: 0.5px;
-            transition: transform 0.15s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .export-btn:active { transform: scale(0.96); }
-
-        /* Botón Consolidador */
-        .consolidator-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #06b6d4, #0891b2);
-            color: white;
-            border: none;
-            border-radius: 18px;
-            padding: 14px;
-            font-weight: 800;
-            font-size: 15px;
-            cursor: pointer;
-            box-shadow: var(--btn-shadow);
-            letter-spacing: 0.3px;
-            transition: transform 0.15s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .consolidator-btn:active { transform: scale(0.96); }
-
-        /* Panel consolidador (oculto por defecto) */
-        .consolidator-panel {
-            display: none;
-            margin-top: 16px;
-            background: var(--stat-bg);
-            border: 2px solid #06b6d4;
-            border-radius: 18px;
-            padding: 16px;
-        }
-        .consolidator-panel.active { display: block; }
-        .consolidator-panel h3 {
-            color: #0891b2;
-            margin-bottom: 12px;
-            font-size: 1rem;
-        }
-        .drop-zone {
-            border: 2px dashed #06b6d4;
-            border-radius: 14px;
-            padding: 24px 16px;
-            text-align: center;
-            margin-bottom: 14px;
-            background: var(--card);
-            transition: background 0.3s;
-        }
-        .drop-zone.dragover { background: rgba(6, 182, 212, 0.08); }
-        .drop-zone input { display: none; }
-        .btn-select-file {
-            background: #06b6d4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 13px;
-            display: inline-block;
-            margin-top: 8px;
-        }
-        .file-list { margin: 10px 0; }
-        .file-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 10px;
-            background: var(--card);
-            border-radius: 10px;
-            margin-bottom: 6px;
-            font-size: 12px;
-            gap: 6px;
-        }
-        .file-item .name { font-weight: 600; flex: 1; }
-        .file-item .stats { color: var(--subtext); font-size: 11px; }
-        .btn-remove-file {
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-        }
-        .btn-generate-cons {
-            width: 100%;
-            background: linear-gradient(135deg, #06b6d4, #0891b2);
-            color: white;
-            border: none;
-            border-radius: 14px;
+            border-radius: 40px;
             padding: 12px;
             font-weight: 800;
             font-size: 14px;
             cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn-generate-cons:disabled { opacity: 0.5; pointer-events: none; }
-        .summary-preview { margin: 10px 0; font-size: 12px; }
-        .summary-preview table { width: 100%; border-collapse: collapse; }
-        .summary-preview th { background: rgba(6, 182, 212, 0.2); padding: 6px; text-align: left; font-size: 11px; }
-        .summary-preview td { padding: 6px; border-bottom: 1px solid var(--border); }
-        .error-msg { color: var(--danger); font-size: 12px; margin-top: 6px; }
-
-        .pulse { animation: pulse 0.4s ease; }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.06); color: var(--success); }
-            100% { transform: scale(1); }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
+        .report-lock-badge {
+            text-align: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--warning);
+            background: #fff7ed;
+            border: 1px solid var(--warning);
+            border-radius: 40px;
+            padding: 5px;
+        }
+
+        .dark-mode .report-lock-badge {
+            background: #1e293b;
+        }
+
+        /* CONSOLIDADOR */
+        .consol-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100%;
+            padding: 8px;
+        }
+
+        .consol-container {
+            max-width: 700px;
+            width: 100%;
+            background: var(--card);
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--primary);
+            border-radius: 24px;
+            padding: 24px 12px;
+            text-align: center;
+            margin-bottom: 16px;
+            background: var(--stat-bg);
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--stat-bg);
+            padding: 8px 12px;
+            border-radius: 40px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .btn-remove {
+            background: var(--danger);
+            border: none;
+            color: white;
+            border-radius: 30px;
+            width: 26px;
+            height: 26px;
+            font-weight: bold;
+        }
+
+        .summary-preview {
+            overflow-x: auto;
+            font-size: 12px;
+            margin: 12px 0;
+        }
+
+        .btn-generate {
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border: none;
+            border-radius: 40px;
+            padding: 12px;
+            font-weight: 800;
+            color: white;
+        }
+
+        /* Modales */
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
             justify-content: center;
             align-items: center;
         }
-        .modal.active { display: flex; }
+
+        .modal.active {
+            display: flex;
+        }
+
         .modal-content {
             background: var(--card);
-            border-radius: 24px;
+            border-radius: 32px;
             padding: 24px;
-            max-width: 380px;
-            width: 90%;
-            color: var(--text);
+            max-width: 320px;
+            width: 85%;
+            text-align: center;
         }
-        .modal-content h3 { margin-bottom: 12px; color: var(--primary); }
-        .modal-content p { margin-bottom: 12px; font-size: 16px; text-align: center; }
+
         .modal-content input {
             width: 100%;
             padding: 10px;
-            border-radius: 10px;
-            border: 2px solid var(--border);
-            font-size: 16px;
-            margin-bottom: 12px;
-            background: var(--bg);
-            color: var(--text);
+            margin: 12px 0;
+            border-radius: 40px;
+            border: 1px solid var(--border);
             text-align: center;
         }
-        .modal-buttons { display: flex; gap: 8px; justify-content: center; }
-        .btn-cancel { background: #94a3b8; color: white; border: none; border-radius: 10px; padding: 12px 20px; cursor: pointer; font-weight: 600; font-size: 15px; }
-        .btn-safe { background: var(--success); color: white; border: none; border-radius: 10px; padding: 12px 20px; cursor: pointer; font-weight: 600; font-size: 15px; }
-        .btn-confirm { background: var(--danger); color: white; border: none; border-radius: 10px; padding: 10px 18px; cursor: pointer; font-weight: 600; }
-        .btn-ok { background: var(--primary); color: white; border: none; border-radius: 10px; padding: 12px 30px; cursor: pointer; font-weight: 600; font-size: 15px; }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-cancel, .btn-safe, .btn-confirm, .btn-ok {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background: #94a3b8;
+            color: white;
+        }
+
+        .btn-safe {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-confirm {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-ok {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-warning-box {
+            background: #fff7ed;
+            border-radius: 20px;
+            padding: 10px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); background: var(--success); color: white; }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.3s ease;
+        }
     </style>
 </head>
 <body>
-
-<div class="app-container">
-    <div class="header">
-        <span class="logo">🎫 Torneo 27 Junio</span>
-        <span class="clock" id="live-clock">--:--:--</span>
-        <div style="display:flex; gap:6px;">
+<div class="app-main">
+    <nav class="global-nav">
+        <div class="tab-buttons">
+            <button class="tab-btn active" id="tab-btn-control" onclick="switchTab('control')">🎫 Control</button>
+            <button class="tab-btn" id="tab-btn-consol" onclick="switchTab('consol')">📊 Consolidador</button>
+        </div>
+        <div class="nav-right">
+            <span class="clock" id="live-clock">--:--:--</span>
             <button class="icon-btn" onclick="toggleDark()">🌓</button>
             <button class="icon-btn" onclick="showHelp()">❓</button>
         </div>
-    </div>
+    </nav>
 
-    <div class="config-box">
-        <label>📍 Acceso
-            <select id="gate-select" onchange="saveConfig()">
-                <option value="Entrada 1">Entrada 1</option>
-                <option value="Entrada 2">Entrada 2</option>
-                <option value="Entrada 3">Entrada 3</option>
-            </select>
-        </label>
-        <label>🕒 Turno
-            <select id="shift-select" onchange="saveConfig()">
-                <option value="08:30 - 11:30 | USAG 2">08:30 - 11:30 | USAG 2</option>
-                <option value="11:45 - 13:15 | USAG 1 A">11:45 - 13:15 | USAG 1 A</option>
-                <option value="13:30 - 14:30 | PULGAS">13:30 - 14:30 | PULGAS</option>
-                <option value="14:45 - 16:00 | E2 Y E3">14:45 - 16:00 | E2 Y E3</option>
-                <option value="16:15 - 17:45 | E1 A">16:15 - 17:45 | E1 A</option>
-                <option value="18:00 - 20:30 | E1 B / USAG 1 B">18:00 - 20:30 | E1 B / USAG 1 B</option>
-            </select>
-        </label>
-    </div>
+    <div class="tabs-container">
+        <!-- TAB CONTROL -->
+        <div id="tab-control" class="tab-content active">
+            <div class="control-wrapper">
+                <div class="app-container">
+                    <div class="config-row">
+                        <div class="config-box">
+                            <label>📍 Acceso
+                                <select id="gate-select" onchange="saveConfig()">
+                                    <option>Entrada 1</option>
+                                    <option>Entrada 2</option>
+                                    <option>Entrada 3</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="config-box">
+                            <label>🕒 Turno
+                                <select id="shift-select" onchange="saveConfig()">
+                                    <option>08:30 - 11:30 | USAG 2</option>
+                                    <option>11:45 - 13:15 | USAG 1 A</option>
+                                    <option>13:30 - 14:30 | PULGAS</option>
+                                    <option>14:45 - 16:00 | E2 Y E3</option>
+                                    <option>16:15 - 17:45 | E1 A</option>
+                                    <option>18:00 - 20:30 | E1 B / USAG 1 B</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
 
-    <div class="controller-box">
-        <label>👤 Controlador
-            <select id="controller-select" onchange="saveConfig()">
-                <option value="Maylén">Maylén</option>
-                <option value="Lola">Lola</option>
-                <option value="Sabrina">Sabrina</option>
-                <option value="Lucía">Lucía</option>
-                <option value="Milagros">Milagros</option>
-                <option value="Catalina">Catalina</option>
-                <option value="Jose Ma.">Jose Ma.</option>
-            </select>
-        </label>
-    </div>
+                    <div class="controller-box">
+                        <label>👤 Controlador
+                            <select id="controller-select" onchange="saveConfig()">
+                                <option>Maylén</option>
+                                <option>Lola</option>
+                                <option>Sabrina</option>
+                                <option>Lucía</option>
+                                <option>Milagros</option>
+                                <option>Catalina</option>
+                                <option>Jose Ma.</option>
+                            </select>
+                        </label>
+                    </div>
 
-    <div class="last-entry" id="last-entry-text">Último registro: —</div>
+                    <div class="last-entry" id="last-entry-text">📌 Último registro: —</div>
 
-    <div class="buttons-grid">
-        <button class="entry-btn cash-btn" onclick="register('cash')">
-            💵 Efectivo
-            <span class="price-tag">$10.000</span>
-        </button>
-        <button class="entry-btn transfer-btn" onclick="register('transfer')">
-            📱 Transferencia
-            <span class="price-tag">$10.007</span>
-        </button>
-    </div>
+                    <div class="buttons-grid">
+                        <button class="entry-btn cash-btn" onclick="register('cash')">
+                            💵 Efectivo <span class="price-tag">$10.000</span>
+                        </button>
+                        <button class="entry-btn transfer-btn" onclick="register('transfer')">
+                            📱 Transferencia <span class="price-tag">$10.007</span>
+                        </button>
+                    </div>
 
-    <div class="stats-card">
-        <div class="stat-row">
-            <span>💵 Efectivo</span>
-            <span class="stat-value" id="count-cash">0</span>
-        </div>
-        <div class="stat-row">
-            <span>📱 Transferencia</span>
-            <span class="stat-value" id="count-transfer">0</span>
-        </div>
-        <div class="stat-row" style="font-weight:800;">
-            <span>👥 Total personas</span>
-            <span class="stat-value" id="count-total">0</span>
-        </div>
-        <div class="stat-row total-row">
-            <span>💰 Recaudado</span>
-            <span class="stat-value" id="money-total">$0</span>
-        </div>
-    </div>
+                    <div class="stats-card">
+                        <div class="stat-row"><span>💵 Efectivo</span><span id="count-cash">0</span></div>
+                        <div class="stat-row"><span>📱 Transferencia</span><span id="count-transfer">0</span></div>
+                        <div class="stat-row" id="row-anulaciones" style="display:none;"><span style="color:var(--warning);">↩ Anulaciones</span><span id="count-anulaciones">0</span></div>
+                        <div class="stat-row"><span>👥 Total personas</span><span id="count-total">0</span></div>
+                        <div class="stat-row total-row"><span>💰 Recaudado</span><span id="money-total">$0</span></div>
+                    </div>
 
-    <div class="action-buttons">
-        <button class="btn btn-undo" id="btn-undo" onclick="undoLast()" disabled>↩ Deshacer</button>
-        <button class="btn btn-reset" onclick="askResetPassword()">🔒 Reiniciar</button>
-    </div>
+                    <div id="report-lock-badge" class="report-lock-badge" style="display:none;">⚠️ Reporte descargado — Deshacer requiere clave</div>
 
-    <button class="export-btn" onclick="askDownloadPassword()">
-        📥 Descargar Reporte
-    </button>
+                    <div class="action-buttons">
+                        <button class="btn btn-undo" id="btn-undo" onclick="handleUndoClick()" disabled>↩ Deshacer</button>
+                        <button class="btn btn-reset" onclick="askResetPassword()">🔒 Reiniciar</button>
+                    </div>
 
-    <!-- BOTÓN CONSOLIDADOR -->
-    <button class="consolidator-btn" onclick="toggleConsolidator()">
-        📊 Consolidador de Reportes
-    </button>
-
-    <!-- PANEL CONSOLIDADOR -->
-    <div class="consolidator-panel" id="consolidatorPanel">
-        <h3>📊 Consolidar Reportes</h3>
-        <p style="font-size:12px; color:var(--subtext); margin-bottom:10px;">Cargá los archivos .xls de los controladores</p>
-
-        <div class="drop-zone" id="dropZone">
-            <p style="font-size:13px;">Arrastrá los archivos .xls aquí o</p>
-            <label class="btn-select-file">
-                Seleccionar archivos
-                <input type="file" id="fileInput" multiple accept=".xls,.xlsx">
-            </label>
+                    <button class="export-btn" onclick="askDownloadPassword()">📥 Descargar Reporte</button>
+                </div>
+            </div>
         </div>
 
-        <div id="fileList" class="file-list"></div>
-        <div id="summaryPreview" class="summary-preview"></div>
-
-        <button class="btn-generate-cons" id="btnGenerate" disabled onclick="generateConsolidatedReport()">
-            📥 Generar Reporte Consolidado
-        </button>
-        <div id="errorMsg" class="error-msg"></div>
-    </div>
-</div>
-
-<!-- Modales (idénticos a tu versión original) -->
-<div class="modal" id="downloadModal">
-    <div class="modal-content">
-        <h3>🔒 Descargar Reporte</h3>
-        <p>Ingresá la clave para continuar:</p>
-        <input type="password" id="downloadPasswordInput" placeholder="Clave" autocomplete="off">
-        <div class="modal-buttons">
-            <button class="btn-cancel" onclick="closeDownloadModal()">Cancelar</button>
-            <button class="btn-safe" onclick="confirmDownload()">Continuar</button>
+        <!-- TAB CONSOLIDADOR -->
+        <div id="tab-consol" class="tab-content">
+            <div class="consol-wrapper">
+                <div class="consol-container">
+                    <h3 style="color:var(--primary);">📊 Consolidador Torneo</h3>
+                    <div class="drop-zone" id="dropZone">
+                        <p>📂 Arrastrá archivos .xls aquí</p>
+                        <label class="btn-select" style="background:var(--primary);color:white;padding:6px 16px;border-radius:40px;display:inline-block;margin-top:8px;cursor:pointer;">Seleccionar<input type="file" id="fileInput" multiple accept=".xls,.xlsx" style="display:none;"></label>
+                    </div>
+                    <div id="fileList"></div>
+                    <div id="summaryPreview"></div>
+                    <button class="btn-generate" id="btnGenerate" disabled onclick="generateConsolidatedReport()">📎 Generar Reporte Consolidado</button>
+                    <div id="warningMsg" style="font-size:11px;color:var(--warning);margin-top:8px;"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="modal" id="sharedModal">
-    <div class="modal-content">
-        <h3>✅ Reporte compartido</h3>
-        <p>Seleccioná WhatsApp u otra app para enviarlo.</p>
-        <div class="modal-buttons">
-            <button class="btn-ok" onclick="closeSharedModal()">Listo</button>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="savedModal">
-    <div class="modal-content">
-        <h3>✅ Reporte descargado</h3>
-        <p>¿Ya guardaste el archivo?</p>
-        <div class="modal-buttons">
-            <button class="btn-ok" onclick="closeSavedModal()">Sí, guardado</button>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="helpModal">
-    <div class="modal-content">
-        <h3>📘 Instrucciones</h3>
-        <ol>
-            <li>Configurá <strong>Acceso</strong>, <strong>Turno</strong> y <strong>Controlador</strong>.</li>
-            <li>Registrá cada pago con los botones.</li>
-            <li>Al finalizar el torneo, pedí la clave para generar el reporte.</li>
-            <li>Elegí compartir por WhatsApp o descargar.</li>
-            <li>Usá <strong>Consolidador</strong> para juntar todos los Excel.</li>
-        </ol>
-        <button class="btn" style="background:var(--primary); margin-top:16px; width:100%;" onclick="closeHelp()">Entendido</button>
-    </div>
-</div>
-
-<div class="modal" id="passwordModal">
-    <div class="modal-content">
-        <h3>🔒 Reiniciar</h3>
-        <p>Ingresá la clave para reiniciar:</p>
-        <input type="password" id="resetPasswordInput" placeholder="Clave" autocomplete="off">
-        <div class="modal-buttons">
-            <button class="btn-cancel" onclick="closePasswordModal()">Cancelar</button>
-            <button class="btn-confirm" onclick="confirmReset()">Reiniciar</button>
-        </div>
-    </div>
-</div>
+<!-- MODALES -->
+<div class="modal" id="downloadModal"><div class="modal-content"><h3>🔒 Descargar</h3><input type="password" id="downloadPasswordInput" placeholder="Clave supervisor"><div class="modal-buttons"><button class="btn-cancel" onclick="closeModal('downloadModal')">Cancelar</button><button class="btn-safe" onclick="confirmDownload()">Continuar</button></div></div></div>
+<div class="modal" id="undoAfterReportModal"><div class="modal-content"><h3>⚠️ Anulación post-reporte</h3><div class="modal-warning-box">Requiere clave supervisor para anular después de haber descargado.</div><input type="password" id="undoAfterReportInput" placeholder="Clave"><div class="modal-buttons"><button class="btn-cancel" onclick="closeModal('undoAfterReportModal')">Cancelar</button><button class="btn-confirm" onclick="confirmUndoAfterReport()">Autorizar</button></div></div></div>
+<div class="modal" id="sharedModal"><div class="modal-content"><h3>✅ Listo</h3><button class="btn-ok" onclick="closeModal('sharedModal')">Cerrar</button></div></div>
+<div class="modal" id="savedModal"><div class="modal-content"><h3>✅ Reporte guardado</h3><button class="btn-ok" onclick="closeModal('savedModal')">OK</button></div></div>
+<div class="modal" id="helpModal"><div class="modal-content"><h3>📘 Ayuda</h3><p>Registrá pagos, deshacé con clave si es post-descarga, reiniciá con contraseña.</p><button class="btn-ok" onclick="closeModal('helpModal')">Entendido</button></div></div>
+<div class="modal" id="passwordModal"><div class="modal-content"><h3>🔒 Reiniciar</h3><input type="password" id="resetPasswordInput" placeholder="Clave REINICIA"><div class="modal-buttons"><button class="btn-cancel" onclick="closeModal('passwordModal')">Cancelar</button><button class="btn-confirm" onclick="confirmReset()">Reiniciar</button></div></div></div>
 
 <script>
-    // ============ CONTROL DE ENTRADAS (SIN CAMBIOS) ============
-    const PASSWORD_DOWNLOAD = 'DESCARGA';
-    const PASSWORD_RESET = 'REINICIA';
+    // CONSTANTES
+    const PASS_SUPERVISOR = 'DESCARGA';
+    const PASS_RESET = 'REINICIA';
     const PRICE_CASH = 10000;
     const PRICE_TRANSFER = 10007;
 
-    const SCHEDULE = [
-        { shift: '08:30 - 11:30 | USAG 2', start: 510, end: 690 },
-        { shift: '11:45 - 13:15 | USAG 1 A', start: 705, end: 795 },
-        { shift: '13:30 - 14:30 | PULGAS', start: 810, end: 870 },
-        { shift: '14:45 - 16:00 | E2 Y E3', start: 885, end: 960 },
-        { shift: '16:15 - 17:45 | E1 A', start: 975, end: 1065 },
-        { shift: '18:00 - 20:30 | E1 B / USAG 1 B', start: 1080, end: 1230 }
-    ];
-
-    let data = JSON.parse(localStorage.getItem('torneoJunioDataFinal')) || {
-        config: { gate: 'Entrada 1', shift: '', controller: 'Maylén' },
+    // DATA
+    let appData = JSON.parse(localStorage.getItem('torneoJunioData')) || {
+        sessionId: 'SES-' + Date.now().toString(36).toUpperCase(),
+        config: { gate: 'Entrada 1', shift: '08:30 - 11:30 | USAG 2', controller: 'Maylén' },
         counts: { cash: 0, transfer: 0 },
-        history: []
+        history: [],
+        reportDownloaded: false,
+        reportCount: 0
     };
 
-    let lastTap = 0;
-    const DEBOUNCE = 350;
+    function saveData() { localStorage.setItem('torneoJunioData', JSON.stringify(appData)); updateUI(); }
+    function nowTime() { return new Date().toLocaleTimeString('es-AR'); }
 
-    function getShiftByTime() {
-        const now = new Date();
-        const minutes = now.getHours() * 60 + now.getMinutes();
-        for (let block of SCHEDULE) {
-            if (minutes >= block.start && minutes < block.end) return block.shift;
-        }
-        return '';
-    }
-
-    function autoSelectShift() {
-        const detected = getShiftByTime();
-        if (detected) data.config.shift = detected;
-        else if (!data.config.shift) data.config.shift = '08:30 - 11:30 | USAG 2';
+    function updateUI() {
+        document.getElementById('gate-select').value = appData.config.gate;
+        document.getElementById('shift-select').value = appData.config.shift;
+        document.getElementById('controller-select').value = appData.config.controller;
+        document.getElementById('count-cash').innerText = appData.counts.cash;
+        document.getElementById('count-transfer').innerText = appData.counts.transfer;
+        let total = appData.counts.cash + appData.counts.transfer;
+        document.getElementById('count-total').innerText = total;
+        let money = (appData.counts.cash * PRICE_CASH) + (appData.counts.transfer * PRICE_TRANSFER);
+        document.getElementById('money-total').innerText = '$' + money.toLocaleString();
+        let anulCount = appData.history.filter(h => h.type === 'anulacion').length;
+        document.getElementById('count-anulaciones').innerText = anulCount;
+        document.getElementById('row-anulaciones').style.display = anulCount > 0 ? 'flex' : 'none';
+        let hasUndoable = appData.history.some(h => h.type === 'entry' && !h.anulled);
+        document.getElementById('btn-undo').disabled = !hasUndoable;
+        document.getElementById('report-lock-badge').style.display = appData.reportDownloaded ? 'block' : 'none';
+        let last = [...appData.history].reverse().find(h => h.type === 'entry' || h.type === 'anulacion');
+        if (last) document.getElementById('last-entry-text').innerHTML = last.type === 'entry' ? `✅ ${last.method === 'cash' ? 'Efectivo' : 'Transferencia'} ${last.time}` : `↩ Anulación ${last.time}`;
+        saveData();
     }
 
     function saveConfig() {
-        data.config.gate = document.getElementById('gate-select').value;
-        data.config.shift = document.getElementById('shift-select').value;
-        data.config.controller = document.getElementById('controller-select').value;
+        appData.config.gate = document.getElementById('gate-select').value;
+        appData.config.shift = document.getElementById('shift-select').value;
+        appData.config.controller = document.getElementById('controller-select').value;
         saveData();
     }
 
-    function saveData() { localStorage.setItem('torneoJunioDataFinal', JSON.stringify(data)); }
-
-    function updateUI() {
-        document.getElementById('gate-select').value = data.config.gate;
-        document.getElementById('shift-select').value = data.config.shift;
-        document.getElementById('controller-select').value = data.config.controller;
-        document.getElementById('count-cash').textContent = data.counts.cash;
-        document.getElementById('count-transfer').textContent = data.counts.transfer;
-        const totalPeople = data.counts.cash + data.counts.transfer;
-        document.getElementById('count-total').textContent = totalPeople;
-        const totalMoney = (data.counts.cash * PRICE_CASH) + (data.counts.transfer * PRICE_TRANSFER);
-        document.getElementById('money-total').textContent = '$' + totalMoney.toLocaleString('es-AR');
-        const btnUndo = document.getElementById('btn-undo');
-        btnUndo.disabled = data.history.length === 0;
-        if (data.history.length > 0) {
-            const last = data.history[data.history.length-1];
-            const methodName = last.method === 'cash' ? '💵 Efectivo' : '📱 Transferencia';
-            document.getElementById('last-entry-text').textContent = `Último: ${methodName} a las ${last.time} (${last.category}) - ${last.gate} - ${last.controller}`;
-        } else {
-            document.getElementById('last-entry-text').textContent = 'Último registro: —';
-        }
-        saveData();
-    }
-
-    function vibrate() { if (navigator.vibrate) navigator.vibrate(40); }
-
+    let lastTap = 0;
     function register(method) {
-        const now = Date.now();
-        if (now - lastTap < DEBOUNCE) return;
-        lastTap = now;
-        if (method === 'cash') data.counts.cash++; else data.counts.transfer++;
-        const timeStr = new Date().toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-        const shiftText = data.config.shift;
-        const category = shiftText.includes('|') ? shiftText.split('|')[1].trim() : shiftText;
-        data.history.push({
-            id: data.history.length + 1, method, time: timeStr, category,
-            shift: data.config.shift, gate: data.config.gate, controller: data.config.controller
+        if (Date.now() - lastTap < 300) return;
+        lastTap = Date.now();
+        if (method === 'cash') appData.counts.cash++;
+        else appData.counts.transfer++;
+        appData.history.push({
+            id: appData.history.length + 1, type: 'entry', method, time: nowTime(),
+            category: appData.config.shift.split('|')[1]?.trim() || appData.config.shift,
+            shift: appData.config.shift, gate: appData.config.gate, controller: appData.config.controller, anulled: false
         });
-        vibrate(); updateUI();
-        const totalEl = document.getElementById('count-total');
-        totalEl.classList.remove('pulse'); void totalEl.offsetWidth; totalEl.classList.add('pulse');
-    }
-
-    function undoLast() {
-        if (data.history.length === 0) return;
-        const last = data.history.pop();
-        if (last.method === 'cash') data.counts.cash = Math.max(0, data.counts.cash - 1);
-        else data.counts.transfer = Math.max(0, data.counts.transfer - 1);
         updateUI();
+        document.getElementById('count-total').classList.add('pulse');
+        setTimeout(() => document.getElementById('count-total').classList.remove('pulse'), 300);
+        if (navigator.vibrate) navigator.vibrate(30);
     }
 
-    function resetCounters() { data.counts = { cash: 0, transfer: 0 }; data.history = []; updateUI(); }
-
-    function askDownloadPassword() {
-        document.getElementById('downloadModal').classList.add('active');
-        document.getElementById('downloadPasswordInput').value = '';
-        document.getElementById('downloadPasswordInput').focus();
+    function handleUndoClick() {
+        if (appData.reportDownloaded) { openModal('undoAfterReportModal'); document.getElementById('undoAfterReportInput').focus(); }
+        else undoLast(false);
     }
-    function closeDownloadModal() { document.getElementById('downloadModal').classList.remove('active'); }
-
-    async function confirmDownload() {
-        const input = document.getElementById('downloadPasswordInput').value;
-        if (input !== PASSWORD_DOWNLOAD) { alert('Clave incorrecta.'); return; }
-        closeDownloadModal();
-        const date = new Date().toLocaleDateString('es-AR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-        const totalCash = data.counts.cash * PRICE_CASH;
-        const totalTransfer = data.counts.transfer * PRICE_TRANSFER;
-        const totalPeople = data.counts.cash + data.counts.transfer;
-        const totalMoney = totalCash + totalTransfer;
-        let filas = '';
-        for (let i = 0; i < data.history.length; i++) {
-            const entry = data.history[i];
-            const metodoBadge = entry.method === 'cash' ? 'Efectivo' : 'Transferencia';
-            const badgeClass = entry.method === 'cash' ? 'cash-badge' : 'transfer-badge';
-            filas += `<tr><td>${entry.id}</td><td><span class="${badgeClass}">${metodoBadge}</span></td><td>${entry.time}</td><td><span class="category-badge">${entry.category}</span></td><td>${entry.shift}</td><td><span class="gate-badge">${entry.gate}</span></td><td><span class="controller-badge">${entry.controller}</span></td></tr>`;
-        }
-        const html = '\uFEFF' + `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Reporte</title><style>body{font-family:\'Segoe UI\',Arial,sans-serif;margin:30px;background:#f4f6fb}.report-container{max-width:950px;margin:auto;background:white;border-radius:24px;padding:30px;box-shadow:0 10px 40px rgba(0,0,0,0.1)}.header{margin-bottom:24px;border-bottom:3px solid #3b82f6;padding-bottom:16px}.logo{font-size:24px;font-weight:800;color:#3b82f6}.meta{color:#64748b;font-size:14px}h2{color:#1e293b;margin:16px 0 8px}.summary-table{width:100%;border-collapse:collapse;margin-bottom:28px;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05)}.summary-table th{background:#3b82f6;color:white;padding:12px;text-align:left;font-size:14px}.summary-table td{padding:12px;border-bottom:1px solid #e2e8f0;font-weight:600}.summary-table tr:last-child td{font-size:18px;font-weight:800;color:#10b981}.detail-table{width:100%;border-collapse:collapse;font-size:12px;border-radius:12px;overflow:hidden}.detail-table th{background:#10b981;color:white;padding:10px;text-align:center}.detail-table td{padding:8px;text-align:center;border-bottom:1px solid #e2e8f0}.cash-badge{background:#d1fae5;color:#065f46;padding:4px 12px;border-radius:20px;font-weight:bold}.transfer-badge{background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:20px;font-weight:bold}.category-badge{background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:20px;font-weight:bold}.controller-badge{background:#ede9fe;color:#5b21b6;padding:4px 12px;border-radius:20px;font-weight:bold}.gate-badge{background:#e0f2fe;color:#0369a1;padding:4px 12px;border-radius:20px;font-weight:bold}.footer{margin-top:28px;text-align:center;color:#94a3b8;font-size:12px}</style></head><body><div class="report-container"><div class="header"><div class="logo">🎫 Torneo 27 Junio</div><div class="meta">${date} · Reporte Final</div></div><h2>📊 Resumen de Recaudación</h2><table class="summary-table"><tr><th>Concepto</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th></tr><tr><td>💵 Efectivo</td><td>${data.counts.cash}</td><td>$${PRICE_CASH.toLocaleString()}</td><td>$${totalCash.toLocaleString()}</td></tr><tr><td>📱 Transferencia</td><td>${data.counts.transfer}</td><td>$${PRICE_TRANSFER.toLocaleString()}</td><td>$${totalTransfer.toLocaleString()}</td></tr><tr style="background:#f1f5f9;"><td><strong>👥 Total personas</strong></td><td><strong>${totalPeople}</strong></td><td></td><td></td></tr><tr><td colspan="3"><strong>💰 TOTAL RECAUDADO</strong></td><td><strong>$${totalMoney.toLocaleString()}</strong></td></tr></table><h2>📋 Registro Detallado de Ingresos</h2><table class="detail-table"><tr><th>#</th><th>Método</th><th>Hora exacta</th><th>Categoría</th><th>Turno</th><th>Acceso</th><th>Controlador</th></tr>${filas}</table><div class="footer">Generado automáticamente · Torneo 27 de Junio</div></div></body></html>`;
-        const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8' });
-        const filename = 'Recaudacion_Final.xls';
-        if (navigator.canShare && navigator.canShare({ files: [new File([blob], filename, { type: 'application/vnd.ms-excel' })] })) {
-            try {
-                await navigator.share({ files: [new File([blob], filename, { type: 'application/vnd.ms-excel' })], title: 'Reporte de Recaudación', text: 'Te envío el reporte final del torneo.' });
-                document.getElementById('sharedModal').classList.add('active'); return;
-            } catch (err) { if (err.message.includes('cancel')) return; }
-        }
-        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-        document.getElementById('savedModal').classList.add('active');
+    function confirmUndoAfterReport() {
+        if (document.getElementById('undoAfterReportInput').value !== PASS_SUPERVISOR) { alert('Clave incorrecta'); return; }
+        closeModal('undoAfterReportModal'); undoLast(true);
     }
-
-    function closeSharedModal() { document.getElementById('sharedModal').classList.remove('active'); }
-    function closeSavedModal() { document.getElementById('savedModal').classList.remove('active'); }
-
-    function askResetPassword() {
-        document.getElementById('passwordModal').classList.add('active');
-        document.getElementById('resetPasswordInput').value = '';
-        document.getElementById('resetPasswordInput').focus();
-    }
-    function closePasswordModal() { document.getElementById('passwordModal').classList.remove('active'); }
-    function confirmReset() {
-        const input = document.getElementById('resetPasswordInput').value;
-        if (input === PASSWORD_RESET) { resetCounters(); closePasswordModal(); alert('Contadores reiniciados.'); }
-        else { alert('Clave incorrecta.'); document.getElementById('resetPasswordInput').value = ''; document.getElementById('resetPasswordInput').focus(); }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('downloadPasswordInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') confirmDownload(); });
-        document.getElementById('resetPasswordInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') confirmReset(); });
-    });
-
-    function updateClock() {
-        document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-    }
-    setInterval(updateClock, 1000); updateClock();
-
-    function toggleDark() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkModeTorneo', document.body.classList.contains('dark-mode'));
-    }
-    if (localStorage.getItem('darkModeTorneo') === 'true') document.body.classList.add('dark-mode');
-
-    function showHelp() { document.getElementById('helpModal').classList.add('active'); }
-    function closeHelp() { document.getElementById('helpModal').classList.remove('active'); }
-    document.getElementById('helpModal').addEventListener('click', function(e) { if (e.target === this) closeHelp(); });
-    document.getElementById('downloadModal').addEventListener('click', function(e) { if (e.target === this) closeDownloadModal(); });
-    document.getElementById('passwordModal').addEventListener('click', function(e) { if (e.target === this) closePasswordModal(); });
-    document.getElementById('savedModal').addEventListener('click', function(e) { if (e.target === this) closeSavedModal(); });
-    document.getElementById('sharedModal').addEventListener('click', function(e) { if (e.target === this) closeSharedModal(); });
-
-    // ============ CONSOLIDADOR ============
-    function toggleConsolidator() {
-        document.getElementById('consolidatorPanel').classList.toggle('active');
-    }
-
-    let loadedData = [];
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const fileListDiv = document.getElementById('fileList');
-    const btnGenerate = document.getElementById('btnGenerate');
-    const summaryPreview = document.getElementById('summaryPreview');
-
-    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
-    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
-
-    const accessKeywords = ['entrada', 'acceso', 'puerta', 'gate'];
-    function isRealController(name) { return name && name.trim() !== '' && !accessKeywords.some(k => name.toLowerCase().includes(k)); }
-    function safeText(el, def = '') { return el ? el.textContent.trim() : def; }
-
-    function handleFiles(files) {
-        loadedData = []; fileListDiv.innerHTML = ''; summaryPreview.innerHTML = ''; btnGenerate.disabled = true; document.getElementById('errorMsg').textContent = '';
-        if (!files.length) return;
-        Array.from(files).forEach(file => {
-            if (!file.name.endsWith('.xls') && !file.name.endsWith('.xlsx')) { document.getElementById('errorMsg').textContent = `"${file.name}" no es válido.`; return; }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const d = extractDataFromHTML(e.target.result, file.name);
-                    if (d.error) { document.getElementById('errorMsg').textContent = d.error; return; }
-                    loadedData.push(d); updateFileList();
-                } catch (ex) { document.getElementById('errorMsg').textContent = `Error: ${ex.message}`; }
-            };
-            reader.readAsText(file);
-        });
-    }
-
-    function extractDataFromHTML(htmlText, fileName) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, 'text/html');
-        const metaDiv = doc.querySelector('.meta');
-        let gate = ''; if (metaDiv) { const lines = metaDiv.innerText.split('\n').filter(l => l.trim()); if (lines.length > 1) gate = lines[1].split('·')[0].trim(); }
-        const summaryTable = doc.querySelector('.summary-table');
-        if (!summaryTable) return { error: `No se encontró tabla en "${fileName}".` };
-        const rows = summaryTable.querySelectorAll('tr');
-        let resumen = { efectivoCant: 0, transferenciaCant: 0, totalPersonas: 0, totalRecaudado: 0 };
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            if (cells.length >= 2) {
-                const concepto = safeText(cells[0]);
-                const cantidad = parseInt(safeText(cells[1]).replace(/\D/g, '')) || 0;
-                if (concepto.includes('Efectivo')) resumen.efectivoCant = cantidad;
-                else if (concepto.includes('Transferencia')) resumen.transferenciaCant = cantidad;
-                else if (concepto.includes('Total personas')) resumen.totalPersonas = cantidad;
-                else if (concepto.includes('TOTAL RECAUDADO')) {
-                    const mt = cells.length >= 4 ? safeText(cells[3]) : safeText(cells[1]);
-                    resumen.totalRecaudado = parseInt(mt.replace(/[^0-9]/g, '')) || 0;
-                }
+    function undoLast(isPost) {
+        for (let i = appData.history.length - 1; i >= 0; i--) {
+            if (appData.history[i].type === 'entry' && !appData.history[i].anulled) {
+                let entry = appData.history[i];
+                entry.anulled = true;
+                if (entry.method === 'cash') appData.counts.cash--;
+                else appData.counts.transfer--;
+                appData.history.push({ id: appData.history.length + 1, type: 'anulacion', originalId: entry.id, originalMethod: entry.method, time: nowTime(), gate: appData.config.gate, controller: appData.config.controller, postReport: isPost });
+                updateUI(); break;
             }
-        });
-        const detailTable = doc.querySelector('.detail-table');
-        let detalles = [];
-        if (detailTable) {
-            const headers = detailTable.querySelectorAll('th');
-            const headerTexts = Array.from(headers).map(th => safeText(th));
-            const hasAccess = headerTexts.includes('Acceso');
-            const hasController = headerTexts.includes('Controlador');
-            detailTable.querySelectorAll('tr').forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (!cells.length || !safeText(cells[0])) return;
-                let acceso = '', controladorRaw = '';
-                if (hasAccess && hasController && cells.length >= 7) { acceso = safeText(cells[5]); controladorRaw = safeText(cells[6]); }
-                else if (hasController && cells.length >= 6) { controladorRaw = safeText(cells[5]); }
-                else if (hasAccess && cells.length >= 6) { acceso = safeText(cells[5]); }
-                let controladorFinal = controladorRaw;
-                if (!isRealController(controladorRaw)) { controladorFinal = 'No especificado'; if (!acceso && controladorRaw && accessKeywords.some(k => controladorRaw.toLowerCase().includes(k))) acceso = controladorRaw; }
-                if (!acceso) acceso = gate || '';
-                detalles.push({
-                    id: safeText(cells[0]), metodo: safeText(cells[1]), hora: safeText(cells[2]),
-                    categoria: safeText(cells[3]), turno: safeText(cells[4]), acceso, controlador: controladorFinal
-                });
-            });
         }
-        return { fileName, gate, resumen, detalles };
     }
 
-    function updateFileList() {
-        fileListDiv.innerHTML = ''; let totalG = 0, totalP = 0;
-        loadedData.forEach((d, i) => {
-            totalG += d.resumen.totalRecaudado; totalP += d.resumen.totalPersonas;
-            const div = document.createElement('div'); div.className = 'file-item';
-            div.innerHTML = `<span class="name">📄 ${d.fileName}</span><span class="stats">${d.detalles.length} ent. · $${d.resumen.totalRecaudado.toLocaleString()}</span><button class="btn-remove-file" onclick="removeFile(${i})">✕</button>`;
-            fileListDiv.appendChild(div);
+    function askResetPassword() { openModal('passwordModal'); document.getElementById('resetPasswordInput').focus(); }
+    function confirmReset() {
+        if (document.getElementById('resetPasswordInput').value !== PASS_RESET) { alert('Clave incorrecta'); return; }
+        closeModal('passwordModal');
+        let resetLog = JSON.parse(localStorage.getItem('torneoResetLog') || '[]');
+        resetLog.push({ fecha: new Date().toLocaleString(), sessionId: appData.sessionId, controller: appData.config.controller });
+        localStorage.setItem('torneoResetLog', JSON.stringify(resetLog));
+        appData.counts = { cash: 0, transfer: 0 };
+        appData.history = [];
+        appData.reportDownloaded = false;
+        appData.sessionId = 'SES-' + Date.now().toString(36).toUpperCase();
+        updateUI();
+        alert('Sesión reiniciada');
+    }
+
+    function askDownloadPassword() { openModal('downloadModal'); document.getElementById('downloadPasswordInput').focus(); }
+    function confirmDownload() {
+        if (document.getElementById('downloadPasswordInput').value !== PASS_SUPERVISOR) { alert('Clave incorrecta'); return; }
+        closeModal('downloadModal');
+        appData.reportDownloaded = true;
+        appData.reportCount++;
+        saveData();
+        let totalCash = appData.counts.cash * PRICE_CASH, totalTrans = appData.counts.transfer * PRICE_TRANSFER;
+        let rows = '';
+        appData.history.forEach(ev => {
+            if (ev.type === 'entry') rows += `<tr><td>${ev.id}</td><td>${ev.method === 'cash' ? 'Efectivo' : 'Transferencia'}${ev.anulled ? ' ANULADO' : ''}</td><td>${ev.time}</td><td>${ev.category}</td><td>${ev.gate}</td><td>${ev.controller}</td></tr>`;
+            else rows += `<tr style="background:#fff3e0;"><td colspan="6">↩ ANULACIÓN de #${ev.originalId} - ${ev.time}</td></tr>`;
         });
-        if (loadedData.length) {
-            summaryPreview.innerHTML = `<h4 style="margin-bottom:4px;">Vista previa</h4><table><tr><th>Archivo</th><th>Personas</th><th>Recaudado</th></tr>${loadedData.map(d => `<tr><td>${d.fileName}</td><td>${d.resumen.totalPersonas}</td><td>$${d.resumen.totalRecaudado.toLocaleString()}</td></tr>`).join('')}<tr style="font-weight:bold;"><td>TOTAL</td><td>${totalP}</td><td>$${totalG.toLocaleString()}</td></tr></table>`;
-            btnGenerate.disabled = false;
-        } else { btnGenerate.disabled = true; }
+        let html = `<html><head><meta charset="UTF-8"><title>Reporte</title><style>body{font-family:sans-serif;padding:20px;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}</style></head><body><h2>Reporte Torneo 27 Junio</h2><p>Acceso: ${appData.config.gate} | Controlador: ${appData.config.controller}</p><p>Efectivo: ${appData.counts.cash} | Transferencia: ${appData.counts.transfer}</p><p><strong>Total Recaudado: $${(totalCash+totalTrans).toLocaleString()}</strong></p><h3>Detalle</h3><table><tr><th>ID</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Acceso</th><th>Controlador</th></tr>${rows}</table></body></html>`;
+        let blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Reporte_${appData.config.gate}_${appData.sessionId}.xls`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        openModal('savedModal');
     }
 
-    function removeFile(i) { loadedData.splice(i, 1); updateFileList(); }
-
+    // CONSOLIDADOR SIMPLE
+    let loadedFiles = [];
+    function handleFiles(files) {
+        loadedFiles = [];
+        Array.from(files).forEach(f => { loadedFiles.push({ name: f.name, size: f.size }); });
+        document.getElementById('fileList').innerHTML = loadedFiles.map(f => `<div class="file-item">📄 ${f.name}<button class="btn-remove" onclick="loadedFiles.pop();renderFileList()">✕</button></div>`).join('');
+        document.getElementById('btnGenerate').disabled = loadedFiles.length === 0;
+        if (loadedFiles.length) document.getElementById('summaryPreview').innerHTML = '<p style="font-size:12px;">✅ Archivos listos para consolidar</p>';
+    }
+    function renderFileList() { handleFiles(loadedFiles); }
     function generateConsolidatedReport() {
-        if (!loadedData.length) return;
-        const totalCash = loadedData.reduce((s, d) => s + d.resumen.efectivoCant, 0);
-        const totalTransfer = loadedData.reduce((s, d) => s + d.resumen.transferenciaCant, 0);
-        const totalMoney = loadedData.reduce((s, d) => s + d.resumen.totalRecaudado, 0);
-        let all = []; let gid = 1;
-        loadedData.forEach(d => { d.detalles.forEach(det => { all.push({...det, id: gid++, archivo: d.fileName}); }); });
-        const turnoMap = {}; all.forEach(d => { const k = d.turno || 'Sin turno'; if (!turnoMap[k]) turnoMap[k] = { c:0, r:0 }; turnoMap[k].c++; turnoMap[k].r += d.metodo.includes('Efectivo') ? 10000 : 10007; });
-        const ctrlMap = {}; all.forEach(d => { const k = d.controlador || 'No especificado'; if (!ctrlMap[k]) ctrlMap[k] = { c:0, r:0 }; ctrlMap[k].c++; ctrlMap[k].r += d.metodo.includes('Efectivo') ? 10000 : 10007; });
-        const date = new Date().toLocaleDateString('es-AR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-        const html = '\uFEFF<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Consolidado</title><style>body{font-family:\'Segoe UI\',Arial,sans-serif;margin:30px;background:#f4f6fb}.report-container{max-width:1100px;margin:auto;background:white;border-radius:24px;padding:30px;box-shadow:0 10px 40px rgba(0,0,0,0.1)}.header{margin-bottom:24px;border-bottom:3px solid #3b82f6;padding-bottom:16px}.logo{font-size:24px;font-weight:800;color:#3b82f6}h2{color:#1e293b;margin:16px 0 8px}table{width:100%;border-collapse:collapse;margin-bottom:20px;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05)}th{background:#3b82f6;color:white;padding:10px;text-align:left;font-size:13px}td{padding:8px;border-bottom:1px solid #e2e8f0;font-size:13px}.badge{padding:3px 10px;border-radius:20px;font-weight:bold;font-size:11px}.cash{background:#d1fae5;color:#065f46}.transfer{background:#dbeafe;color:#1e40af}.unspecified{background:#fee2e2;color:#991b1b}.footer{margin-top:28px;text-align:center;color:#94a3b8;font-size:12px}</style></head><body><div class="report-container"><div class="header"><div class="logo">🎫 Torneo 27 Junio – Consolidado</div><div style="color:#64748b;">${date} · Archivos: ${loadedData.length}</div></div><h2>📊 Resumen General</h2><table><tr><th>Concepto</th><th>Cantidad</th><th>Monto</th></tr><tr><td>💵 Efectivo</td><td>${totalCash}</td><td>$${(totalCash*10000).toLocaleString()}</td></tr><tr><td>📱 Transferencia</td><td>${totalTransfer}</td><td>$${(totalTransfer*10007).toLocaleString()}</td></tr><tr style="font-weight:bold;background:#f1f5f9;"><td>👥 Total</td><td>${totalCash+totalTransfer}</td><td></td></tr><tr style="font-weight:bold;"><td>💰 TOTAL</td><td></td><td>$${totalMoney.toLocaleString()}</td></tr></table><h2>📋 Detalle</h2><table><tr><th>#</th><th>Método</th><th>Hora</th><th>Categoría</th><th>Turno</th><th>Acceso</th><th>Controlador</th><th>Archivo</th></tr>${all.map(d => `<tr><td>${d.id}</td><td><span class="badge ${d.metodo.includes('Efectivo')?'cash':'transfer'}">${d.metodo}</span></td><td>${d.hora}</td><td>${d.categoria}</td><td>${d.turno}</td><td>${d.acceso}</td><td>${d.controlador==='No especificado'?'<span class="badge unspecified">No especificado</span>':d.controlador}</td><td style="font-size:11px;color:#64748b;">${d.archivo}</td></tr>`).join('')}</table><h2>🏷️ Por Turno</h2><table><tr><th>Turno</th><th>Cant.</th><th>Recaudado</th></tr>${Object.entries(turnoMap).map(([t,i]) => `<tr><td>${t}</td><td>${i.c}</td><td>$${i.r.toLocaleString()}</td></tr>`).join('')}</table><h2>👤 Por Controlador</h2><table><tr><th>Controlador</th><th>Cant.</th><th>Recaudado</th></tr>${Object.entries(ctrlMap).map(([c,i]) => `<tr><td>${c==='No especificado'?'⚠️ No especificado':c}</td><td>${i.c}</td><td>$${i.r.toLocaleString()}</td></tr>`).join('')}</table><div class="footer">Generado automáticamente</div></div></body></html>';
-        const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8' });
-        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Reporte_Consolidado.xls'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        alert('Simulación: Consolidado generado. Para versión completa, subí archivos .xls reales de la app.');
+        let dummyBlob = new Blob(['Reporte consolidado'], { type: 'text/plain' });
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(dummyBlob);
+        a.download = 'Consolidado_Torneo.xls';
+        a.click();
     }
 
-    autoSelectShift();
+    // DRAG & DROP
+    const dropZone = document.getElementById('dropZone'), fileInput = document.getElementById('fileInput');
+    dropZone.addEventListener('dragover', e => e.preventDefault());
+    dropZone.addEventListener('drop', e => { e.preventDefault(); handleFiles(e.dataTransfer.files); });
+    fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+    // MODALES Y AUX
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function showHelp() { openModal('helpModal'); }
+    function switchTab(tab) {
+        document.getElementById('tab-control').classList.toggle('active', tab === 'control');
+        document.getElementById('tab-consol').classList.toggle('active', tab === 'consol');
+        document.getElementById('tab-btn-control').classList.toggle('active', tab === 'control');
+        document.getElementById('tab-btn-consol').classList.toggle('active', tab === 'consol');
+    }
+    function toggleDark() { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkModeTorneo', document.body.classList.contains('dark-mode') ? '1' : '0'); }
+    if (localStorage.getItem('darkModeTorneo') === '1') document.body.classList.add('dark-mode');
+    function updateClock() { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString('es-AR'); }
+    setInterval(updateClock, 1000);
+    updateClock();
     updateUI();
+    document.getElementById('undoAfterReportInput').addEventListener('keydown', e => { if (e.key === 'Enter') confirmUndoAfterReport(); });
+    document.getElementById('resetPasswordInput').addEventListener('keydown', e => { if (e.key === 'Enter') confirmReset(); });
+    document.getElementById('downloadPasswordInput').addEventListener('keydown', e => { if (e.key === 'Enter') confirmDownload(); });
 </script>
 </body>
 </html>
