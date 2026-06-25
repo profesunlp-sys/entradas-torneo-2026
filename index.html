@@ -190,12 +190,20 @@
                         <div class="cfg-label">🕒 Turno</div>
                         <div class="turno-row">
                             <select class="cfg-select" id="shift-select" onchange="saveConfig();userManuallyChangedShift()">
-                                <option>08:30 - 11:30 | USAG 2</option>
-                                <option>11:45 - 13:15 | USAG 1 A</option>
-                                <option>13:30 - 14:30 | PULGAS</option>
-                                <option>14:45 - 16:00 | E2 Y E3</option>
-                                <option>16:15 - 17:45 | E1 A</option>
-                                <option>18:00 - 20:30 | E1 B / USAG 1 B</option>
+                                <optgroup label="── Sábado 27 ──">
+                                <option>SAB 08:30 | USAG 2 y USAG 1A</option>
+                                <option>SAB 10:45 | E3 todas / E2 premini-preinf</option>
+                                <option>SAB 13:00 | E2 mini, inf y juv</option>
+                                <option>SAB 15:30 | E1A premini y mini</option>
+                                <option>SAB 17:30 | E1A preinf-inf-juv / E1B preinf-inf-juv-may</option>
+                                <option>SAB 19:30 | E1B mini</option>
+                                </optgroup>
+                                <optgroup label="── Domingo 28 ──">
+                                <option>DOM 10:00 | USAG 1B todas</option>
+                                <option>DOM 12:00 | E1B premini zona A</option>
+                                <option>DOM 13:30 | E1B premini zona B</option>
+                                <option>DOM 15:00 | PULGAS</option>
+                                </optgroup>
                             </select>
                             <button class="auto-btn" onclick="applyAutoShift()" title="Detectar turno automático">⏰</button>
                         </div>
@@ -363,12 +371,16 @@ const PASS_RESET = 'REINICIA';
 const PRICE_CASH = 10000;
 const PRICE_TRANSFER = 10007;
 const SHIFT_RANGES = [
-    { start: 8*60+30,  end: 11*60+30, shift: "08:30 - 11:30 | USAG 2" },
-    { start: 11*60+45, end: 13*60+15, shift: "11:45 - 13:15 | USAG 1 A" },
-    { start: 13*60+30, end: 14*60+30, shift: "13:30 - 14:30 | PULGAS" },
-    { start: 14*60+45, end: 16*60+0,  shift: "14:45 - 16:00 | E2 Y E3" },
-    { start: 16*60+15, end: 17*60+45, shift: "16:15 - 17:45 | E1 A" },
-    { start: 18*60+0,  end: 20*60+30, shift: "18:00 - 20:30 | E1 B / USAG 1 B" }
+    { start:  8*60+30, end: 10*60+44, shift: "SAB 08:30 | USAG 2 y USAG 1A" },
+    { start: 10*60+45, end: 12*60+59, shift: "SAB 10:45 | E3 todas / E2 premini-preinf" },
+    { start: 13*60+0,  end: 15*60+29, shift: "SAB 13:00 | E2 mini, inf y juv" },
+    { start: 15*60+30, end: 17*60+29, shift: "SAB 15:30 | E1A premini y mini" },
+    { start: 17*60+30, end: 19*60+29, shift: "SAB 17:30 | E1A preinf-inf-juv / E1B preinf-inf-juv-may" },
+    { start: 19*60+30, end: 23*60+59, shift: "SAB 19:30 | E1B mini" },
+    { start: 10*60+0,  end: 11*60+59, shift: "DOM 10:00 | USAG 1B todas" },
+    { start: 12*60+0,  end: 13*60+29, shift: "DOM 12:00 | E1B premini zona A" },
+    { start: 13*60+30, end: 14*60+59, shift: "DOM 13:30 | E1B premini zona B" },
+    { start: 15*60+0,  end: 23*60+59, shift: "DOM 15:00 | PULGAS" }
 ];
 
 // ==================== ESTADO ====================
