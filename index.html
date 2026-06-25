@@ -71,7 +71,18 @@
         .turno-row{display:flex;align-items:center;gap:3px;}
         .turno-row .cfg-select{flex:1;min-width:0;}
         .auto-btn{flex-shrink:0;background:var(--primary-soft);border:none;border-radius:var(--r-full);padding:2px 7px;font-size:9px;font-weight:700;color:var(--primary);cursor:pointer;font-family:inherit;}
-        /* ---- LAST ENTRY ---- */
+        /* ---- CUSTOM DROPDOWN TURNO ---- */
+        .custom-dd{position:relative;flex:1;min-width:0;}
+        .cdd-val{font-size:10.5px;font-weight:700;color:var(--text);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:14px;}
+        .cdd-val::after{content:'▾';position:absolute;right:0;top:0;font-size:9px;color:var(--sub);}
+        .cdd-list{display:none;position:fixed;left:50%;transform:translateX(-50%);top:88px;width:92vw;max-width:420px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-lg);z-index:500;max-height:60vh;overflow-y:auto;}
+        .cdd-list.open{display:block;animation:slidein .15s ease;}
+        .cdd-group{font-size:9px;font-weight:900;color:var(--primary);padding:7px 12px 3px;letter-spacing:.05em;border-top:1px solid var(--border);}
+        .cdd-group:first-child{border-top:none;}
+        .cdd-opt{font-size:11.5px;font-weight:600;color:var(--text);padding:9px 14px;cursor:pointer;transition:background .1s;}
+        .cdd-opt:active,.cdd-opt:hover{background:var(--primary-soft);color:var(--primary);}
+        .cdd-opt.selected{color:var(--primary);font-weight:800;}
+        /* ---- TURNO ROW ---- */
         .last-entry{text-align:center;font-size:10px;font-weight:600;color:var(--sub);background:var(--surface);border:1.5px solid var(--border);padding:6px 12px;border-radius:var(--r-full);margin-bottom:12px;box-shadow:var(--shadow-sm);}
         /* ---- ENTRY BUTTONS ---- */
         .entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
@@ -406,11 +417,10 @@ function getShiftByTime() {
     for (const r of SHIFT_RANGES) if (mins >= r.start && mins <= r.end) return r.shift;
     return null;
 }
-function nowTime() { return new Date().toLocaleTimeString('es-AR'); }
+function nowTime() { return new Date().toLocaleTimeString('es-AR', {hour12:false}); }
 function saveData() { localStorage.setItem('torneoJunioData', JSON.stringify(appData)); }
 function saveConfig() {
     appData.config.gate = document.getElementById('gate-select').value;
-    appData.config.shift = document.getElementById('shift-select').value;
     appData.config.controller = document.getElementById('controller-select').value;
     saveData();
 }
@@ -418,12 +428,36 @@ function applyAutoShift() {
     const a = getShiftByTime();
     if (a) {
         appData.config.shift = a;
-        document.getElementById('shift-select').value = a;
+        setShiftDisplay(a);
         appData.autoShiftEnabled = true;
         saveData();
     }
 }
 function userManuallyChangedShift() { appData.autoShiftEnabled = false; }
+
+// ==================== CUSTOM DROPDOWN TURNO ====================
+function toggleDD() {
+    document.getElementById('shiftList').classList.toggle('open');
+}
+function selectShift(el) {
+    const val = el.textContent.trim();
+    setShiftDisplay(val);
+    appData.config.shift = val;
+    appData.autoShiftEnabled = false;
+    saveData();
+    document.getElementById('shiftList').classList.remove('open');
+}
+function setShiftDisplay(val) {
+    document.getElementById('shiftVal').textContent = val;
+    document.querySelectorAll('.cdd-opt').forEach(o => {
+        o.classList.toggle('selected', o.textContent.trim() === val);
+    });
+}
+document.addEventListener('click', e => {
+    if (!document.getElementById('shiftDD').contains(e.target)) {
+        document.getElementById('shiftList').classList.remove('open');
+    }
+});
 
 // ==================== REGISTRO ====================
 let lastTap = 0;
@@ -615,7 +649,7 @@ function compartirWA() { window.open('https://wa.me/?text=' + encodeURIComponent
 // ==================== UPDATE UI ====================
 function updateUI() {
     document.getElementById('gate-select').value       = appData.config.gate;
-    document.getElementById('shift-select').value      = appData.config.shift;
+    setShiftDisplay(appData.config.shift);
     document.getElementById('controller-select').value = appData.config.controller;
     document.getElementById('count-cash').textContent     = appData.counts.cash;
     document.getElementById('count-transfer').textContent = appData.counts.transfer;
