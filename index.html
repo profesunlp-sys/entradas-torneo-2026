@@ -771,7 +771,7 @@ function toggleDark() {
 }
 if (localStorage.getItem('darkTorneo') === '1') document.body.classList.add('dark');
 function updateClock() {
-    document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('es-AR');
+    document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('es-AR', {hour12: false});
 }
 setInterval(updateClock, 1000);
 updateClock();
