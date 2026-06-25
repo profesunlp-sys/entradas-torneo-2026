@@ -66,6 +66,8 @@
         .cfg-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:6px 8px;box-shadow:var(--shadow-sm);}
         .cfg-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--primary);margin-bottom:3px;}
         .cfg-select{width:100%;border:none;background:transparent;color:var(--text);font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;outline:none;padding:0;}
+        .cfg-select option, .cfg-select optgroup{background:#ffffff;color:#0d1b3e;font-weight:600;}
+        .dark .cfg-select option, .dark .cfg-select optgroup{background:#0f1a35;color:#e8eeff;font-weight:600;}
         .turno-row{display:flex;align-items:center;gap:3px;}
         .turno-row .cfg-select{flex:1;min-width:0;}
         .auto-btn{flex-shrink:0;background:var(--primary-soft);border:none;border-radius:var(--r-full);padding:2px 7px;font-size:9px;font-weight:700;color:var(--primary);cursor:pointer;font-family:inherit;}
@@ -186,25 +188,26 @@
                                 <option>Acceso 3</option>
                         </select>
                     </div>
-                    <div class="cfg-card">
+                    <div class="cfg-card" style="position:relative;">
                         <div class="cfg-label">🕒 Turno</div>
                         <div class="turno-row">
-                            <select class="cfg-select" id="shift-select" onchange="saveConfig();userManuallyChangedShift()">
-                                <optgroup label="── Sábado 27 ──">
-                                <option>SAB 08:30 | USAG 2 Y USAG 1A</option>
-                                <option>SAB 10:45 | E3 Todas / E2 Pre Mini - Pre Inf.</option>
-                                <option>SAB 13:00 | E2 Mini, Inf Y Juv</option>
-                                <option>SAB 15:30 | E1A Pre Mini Y Mini</option>
-                                <option>SAB 17:30 | E1A Pre Inf - Inf - Juv / E1B Pre Inf - Inf - Juv - May</option>
-                                <option>SAB 19:30 | E1B Mini</option>
-                                </optgroup>
-                                <optgroup label="── Domingo 28 ──">
-                                <option>DOM 10:00 | USAG 1B Todas</option>
-                                <option>DOM 12:00 | E1B Pre Mini Zona A</option>
-                                <option>DOM 13:30 | E1B Pre Mini Zona B</option>
-                                <option>DOM 15:00 | Pulgas</option>
-                                </optgroup>
-                            </select>
+                            <div class="custom-dd" id="shiftDD">
+                                <div class="cdd-val" id="shiftVal" onclick="toggleDD()"></div>
+                                <div class="cdd-list" id="shiftList">
+                                    <div class="cdd-group">── Sábado 27 ──</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">SAB 08:30 | USAG 2 Y USAG 1A</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">SAB 10:45 | E3 Todas / E2 Pre Mini - Pre Inf.</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">SAB 13:00 | E2 Mini, Inf Y Juv</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">SAB 15:30 | E1A Pre Mini Y Mini</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">SAB 17:30 | E1A Pre Inf - Inf - Juv / E1B Pre Inf - Inf - Juv - May</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">SAB 19:30 | E1B Mini</div>
+                                    <div class="cdd-group">── Domingo 28 ──</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">DOM 10:00 | USAG 1B Todas</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">DOM 12:00 | E1B Pre Mini Zona A</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">DOM 13:30 | E1B Pre Mini Zona B</div>
+                                    <div class="cdd-opt" onclick="selectShift(this)">DOM 15:00 | Pulgas</div>
+                                </div>
+                            </div>
                             <button class="auto-btn" onclick="applyAutoShift()" title="Detectar turno automático">⏰</button>
                         </div>
                     </div>
