@@ -191,18 +191,18 @@
                         <div class="turno-row">
                             <select class="cfg-select" id="shift-select" onchange="saveConfig();userManuallyChangedShift()">
                                 <optgroup label="── Sábado 27 ──">
-                                <option>SAB 08:30 | USAG 2 y USAG 1A</option>
-                                <option>SAB 10:45 | E3 todas / E2 premini-preinf</option>
-                                <option>SAB 13:00 | E2 mini, inf y juv</option>
-                                <option>SAB 15:30 | E1A premini y mini</option>
-                                <option>SAB 17:30 | E1A preinf-inf-juv / E1B preinf-inf-juv-may</option>
-                                <option>SAB 19:30 | E1B mini</option>
+                                <option>SAB 08:30 | USAG 2 Y USAG 1A</option>
+                                <option>SAB 10:45 | E3 Todas / E2 Pre Mini - Pre Inf.</option>
+                                <option>SAB 13:00 | E2 Mini, Inf Y Juv</option>
+                                <option>SAB 15:30 | E1A Pre Mini Y Mini</option>
+                                <option>SAB 17:30 | E1A Pre Inf - Inf - Juv / E1B Pre Inf - Inf - Juv - May</option>
+                                <option>SAB 19:30 | E1B Mini</option>
                                 </optgroup>
                                 <optgroup label="── Domingo 28 ──">
-                                <option>DOM 10:00 | USAG 1B todas</option>
-                                <option>DOM 12:00 | E1B premini zona A</option>
-                                <option>DOM 13:30 | E1B premini zona B</option>
-                                <option>DOM 15:00 | PULGAS</option>
+                                <option>DOM 10:00 | USAG 1B Todas</option>
+                                <option>DOM 12:00 | E1B Pre Mini Zona A</option>
+                                <option>DOM 13:30 | E1B Pre Mini Zona B</option>
+                                <option>DOM 15:00 | Pulgas</option>
                                 </optgroup>
                             </select>
                             <button class="auto-btn" onclick="applyAutoShift()" title="Detectar turno automático">⏰</button>
@@ -371,16 +371,16 @@ const PASS_RESET = 'REINICIA';
 const PRICE_CASH = 10000;
 const PRICE_TRANSFER = 10007;
 const SHIFT_RANGES = [
-    { start:  8*60+30, end: 10*60+44, shift: "SAB 08:30 | USAG 2 y USAG 1A" },
-    { start: 10*60+45, end: 12*60+59, shift: "SAB 10:45 | E3 todas / E2 premini-preinf" },
-    { start: 13*60+0,  end: 15*60+29, shift: "SAB 13:00 | E2 mini, inf y juv" },
-    { start: 15*60+30, end: 17*60+29, shift: "SAB 15:30 | E1A premini y mini" },
-    { start: 17*60+30, end: 19*60+29, shift: "SAB 17:30 | E1A preinf-inf-juv / E1B preinf-inf-juv-may" },
-    { start: 19*60+30, end: 23*60+59, shift: "SAB 19:30 | E1B mini" },
-    { start: 10*60+0,  end: 11*60+59, shift: "DOM 10:00 | USAG 1B todas" },
-    { start: 12*60+0,  end: 13*60+29, shift: "DOM 12:00 | E1B premini zona A" },
-    { start: 13*60+30, end: 14*60+59, shift: "DOM 13:30 | E1B premini zona B" },
-    { start: 15*60+0,  end: 23*60+59, shift: "DOM 15:00 | PULGAS" }
+    { start:  8*60+30, end: 10*60+44, shift: "SAB 08:30 | USAG 2 Y USAG 1A" },
+    { start: 10*60+45, end: 12*60+59, shift: "SAB 10:45 | E3 Todas / E2 Pre Mini - Pre Inf." },
+    { start: 13*60+0,  end: 15*60+29, shift: "SAB 13:00 | E2 Mini, Inf Y Juv" },
+    { start: 15*60+30, end: 17*60+29, shift: "SAB 15:30 | E1A Pre Mini Y Mini" },
+    { start: 17*60+30, end: 19*60+29, shift: "SAB 17:30 | E1A Pre Inf - Inf - Juv / E1B Pre Inf - Inf - Juv - May" },
+    { start: 19*60+30, end: 23*60+59, shift: "SAB 19:30 | E1B Mini" },
+    { start: 10*60+0,  end: 11*60+59, shift: "DOM 10:00 | USAG 1B Todas" },
+    { start: 12*60+0,  end: 13*60+29, shift: "DOM 12:00 | E1B Pre Mini Zona A" },
+    { start: 13*60+30, end: 14*60+59, shift: "DOM 13:30 | E1B Pre Mini Zona B" },
+    { start: 15*60+0,  end: 23*60+59, shift: "DOM 15:00 | Pulgas" }
 ];
 
 // ==================== ESTADO ====================
